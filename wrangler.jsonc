@@ -1,0 +1,18 @@
+{
+  // Cloudflare Workers config for serving the pre-built Astro static site.
+  "name": "risco-cognitivo-blog",
+  "main": "worker/index.ts",
+  "compatibility_date": "2025-03-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    // Astro's static build output ("astro build" -> output: "static")
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // src/pages/404.astro builds to dist/404.html
+    "not_found_handling": "404-page"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}
