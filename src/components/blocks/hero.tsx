@@ -8,7 +8,6 @@ import {
 
 import { DashedLine } from "@/components/dashed-line";
 import { Button } from "@/components/ui/button";
-import { GITHUB_URL } from "@/consts";
 
 const features = [
   {
@@ -49,20 +48,13 @@ export const Hero = () => {
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4 lg:flex-nowrap">
-            <Button asChild>
-              <a href={GITHUB_URL}>Get template</a>
+            <Button size="lg" asChild>
+              <a href="/blog">Ler o blog</a>
             </Button>
-            <Button
-              variant="outline"
-              className="from-background h-auto gap-2 bg-linear-to-r to-transparent shadow-md"
-              asChild
-            >
-              <a
-                href="https://shadcnblocks.com"
-                className="max-w-56 truncate text-start md:max-w-none"
-              >
-                Built by shadcnblocks.com
-                <ArrowRight className="stroke-3" />
+            <Button variant="outline" size="lg" asChild>
+              <a href="/blog/do-risco-cognitivo-a-execucao-assistida/">
+                Conhecer a tese
+                <ArrowRight />
               </a>
             </Button>
           </div>

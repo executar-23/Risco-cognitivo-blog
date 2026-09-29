@@ -1,7 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 
+import { buttonVariants } from '@/components/ui/button';
 import DefaultLayout from '@/layouts/DefaultLayout.astro';
+import { cn } from '@/lib/utils';
 
 const ARTICLE = '/blog/do-risco-cognitivo-a-execucao-assistida/';
 
@@ -50,7 +52,7 @@ const territories = [
         </p>
         <a
           href={ARTICLE}
-          class="bg-primary text-primary-foreground mt-8 inline-flex h-11 items-center rounded-full px-6 text-sm font-medium transition-opacity hover:opacity-90"
+          class={cn(buttonVariants({ size: 'lg' }), 'mt-8')}
         >
           Conhecer a tese
         </a>
@@ -60,12 +62,12 @@ const territories = [
         <img
           src="/blog/do-risco-cognitivo-a-execucao-assistida/hero.jpg"
           alt="Uma pessoa sustenta uma enorme tecla Ctrl amarela."
-          class="col-span-3 row-span-2 aspect-[4/5] w-full rounded-2xl border object-cover"
+          class="col-span-3 row-span-2 aspect-[4/5] w-full rounded-xl border object-cover"
           width="1080"
           height="1350"
         />
-        <img src="/about/1.webp" alt="" class="col-span-2 h-full w-full rounded-2xl border object-cover" loading="lazy" />
-        <img src="/about/2.webp" alt="" class="col-span-2 h-full w-full rounded-2xl border object-cover" loading="lazy" />
+        <img src="/about/1.webp" alt="" class="col-span-2 h-full w-full rounded-xl border object-cover" loading="lazy" />
+        <img src="/about/2.webp" alt="" class="col-span-2 h-full w-full rounded-xl border object-cover" loading="lazy" />
       </div>
     </div>
   </section>
@@ -81,13 +83,13 @@ const territories = [
             type="button"
             data-filter={f.id}
             aria-pressed={i === 0 ? 'true' : 'false'}
-            class="text-muted-foreground aria-pressed:bg-foreground aria-pressed:text-background hover:text-foreground rounded-full border px-4 py-1.5 text-sm transition-colors"
+            class={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background aria-pressed:hover:bg-foreground/90 aria-pressed:hover:text-background')}
           >
             {f.label}
           </button>
         ))}
       </div>
-      <a href={ARTICLE} class="hidden rounded-full border px-4 py-1.5 text-sm font-medium transition-colors hover:bg-muted md:inline-flex">
+      <a href={ARTICLE} class={cn(buttonVariants({ variant: 'outline' }), 'hidden md:inline-flex')}>
         Explorar todos os territórios
       </a>
     </div>
@@ -95,7 +97,7 @@ const territories = [
     <div class="-mx-6 mt-8 flex snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
       {territories.map((t) => (
         <a href={t.href} data-category={t.category} class="group w-[75%] shrink-0 snap-start md:w-auto">
-          <div class="overflow-hidden rounded-2xl border">
+          <div class="overflow-hidden rounded-xl border">
             <img
               src={t.image}
               alt=""
@@ -109,7 +111,7 @@ const territories = [
       ))}
     </div>
 
-    <a href={ARTICLE} class="mx-auto mt-8 flex w-fit rounded-full border px-5 py-2 text-sm font-medium md:hidden">
+    <a href={ARTICLE} class={cn(buttonVariants({ variant: 'outline' }), 'mx-auto mt-8 flex w-fit md:hidden')}>
       Explorar todos os territórios
     </a>
   </section>
@@ -120,7 +122,7 @@ const territories = [
       <div class="flex items-center justify-between gap-4">
         <h2 id="artigos-title" class="text-3xl font-semibold tracking-tight md:text-4xl">Últimos artigos</h2>
         {older.length > 0 && (
-          <a href="#mais-artigos" class="hidden rounded-full border px-4 py-1.5 text-sm font-medium transition-colors hover:bg-muted md:inline-flex">
+          <a href="#mais-artigos" class={cn(buttonVariants({ variant: 'outline' }), 'hidden md:inline-flex')}>
             Ver todos os artigos
           </a>
         )}
@@ -129,7 +131,7 @@ const territories = [
       <div class="mt-8 grid gap-8 lg:grid-cols-12">
         <a href={`/blog/${featured.id}/`} class="group lg:col-span-7">
           {featured.data.image && (
-            <div class="overflow-hidden rounded-2xl border">
+            <div class="overflow-hidden rounded-xl border">
               <img src={featured.data.image} alt="" class="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105" />
             </div>
           )}
@@ -162,7 +164,7 @@ const territories = [
       </div>
 
       {older.length > 0 && (
-        <a href="#mais-artigos" class="mx-auto mt-8 flex w-fit rounded-full border px-5 py-2 text-sm font-medium md:hidden">
+        <a href="#mais-artigos" class={cn(buttonVariants({ variant: 'outline' }), 'mx-auto mt-8 flex w-fit md:hidden')}>
           Ver todos os artigos
         </a>
       )}
@@ -177,7 +179,7 @@ const territories = [
           <li>
             <a href={`/blog/${post.id}/`} class="group block">
               {post.data.image && (
-                <div class="overflow-hidden rounded-2xl border">
+                <div class="overflow-hidden rounded-xl border">
                   <img src={post.data.image} alt="" loading="lazy" class="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105" />
                 </div>
               )}
@@ -198,7 +200,7 @@ const territories = [
     <h2 id="destaques-title" class="text-3xl font-semibold tracking-tight md:text-4xl">Destaques</h2>
 
     <div class="mt-8 grid gap-6 lg:grid-cols-12">
-      <figure class="bg-card rounded-2xl border p-6 lg:col-span-5">
+      <figure class="bg-card rounded-xl border p-6 lg:col-span-5">
         <div class="flex items-center gap-3">
           <span class="bg-foreground text-background flex size-10 items-center justify-center rounded-full font-semibold">R</span>
           <div>
@@ -216,7 +218,7 @@ const territories = [
         <a href={ARTICLE} class="text-primary mt-4 inline-block text-sm font-medium hover:underline">Ler o manifesto</a>
       </figure>
 
-      <a href="/hub-editorial/" class="group relative overflow-hidden rounded-2xl border lg:col-span-4">
+      <a href="/hub-editorial/" class="group relative overflow-hidden rounded-xl border lg:col-span-4">
         <img src="/about/3.webp" alt="" loading="lazy" class="h-full min-h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105" />
         <span class="bg-background/85 absolute inset-x-3 bottom-3 rounded-xl px-4 py-3 text-sm font-medium backdrop-blur">
           Hub Editorial
@@ -224,13 +226,13 @@ const territories = [
       </a>
 
       <div class="flex flex-col gap-4 lg:col-span-3">
-        <a href="/skills/" class="group relative flex-1 overflow-hidden rounded-2xl border">
+        <a href="/skills/" class="group relative flex-1 overflow-hidden rounded-xl border">
           <img src="/about/4.webp" alt="" loading="lazy" class="h-full min-h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105" />
           <span class="bg-background/85 absolute inset-x-3 bottom-3 rounded-xl px-4 py-3 text-sm font-medium backdrop-blur">
             Catálogo de Skills EXECUTAR
           </span>
         </a>
-        <a href="/admin" class="self-end rounded-full border px-4 py-1.5 text-sm font-medium transition-colors hover:bg-muted">
+        <a href="/admin" class={cn(buttonVariants({ variant: 'outline' }), 'self-end')}>
           Ver todos os destaques
         </a>
       </div>
@@ -249,10 +251,10 @@ const territories = [
         Assine o feed RSS no seu leitor ou fale com a gente para receber novidades.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-3">
-        <a href="/rss.xml" class="bg-primary text-primary-foreground inline-flex h-11 items-center rounded-full px-6 text-sm font-medium transition-opacity hover:opacity-90">
+        <a href="/rss.xml" class={buttonVariants({ size: 'lg' })}>
           Assinar via RSS
         </a>
-        <a href="/contact" class="inline-flex h-11 items-center rounded-full border border-white/60 px-6 text-sm font-medium transition-colors hover:bg-white/10">
+        <a href="/contact" class={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'text-foreground')}>
           Fale conosco
         </a>
       </div>

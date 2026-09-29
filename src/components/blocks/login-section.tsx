@@ -21,7 +21,7 @@ const LoginSection = () => {
                 height={18}
                 className="mb-7 dark:invert"
               />
-              <p className="mb-2 text-2xl font-bold">Welcome back</p>
+              <p className="mb-2 text-2xl font-semibold tracking-tight">Welcome back</p>
               <p className="text-muted-foreground">
                 Please enter your details.
               </p>
