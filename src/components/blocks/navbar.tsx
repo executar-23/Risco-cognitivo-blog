@@ -34,6 +34,8 @@ const ITEMS = [
     ],
   },
   { label: "About Us", href: "/about" },
+  { label: "Blog", href: "/blog" },
+  { label: "Painel", href: "/admin" },
   { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },

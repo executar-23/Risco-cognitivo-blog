@@ -1,0 +1,47 @@
+---
+import DefaultLayout from '@/layouts/DefaultLayout.astro';
+
+const links = [
+  {
+    href: '/blog',
+    label: 'Blog',
+    description: 'Artigos publicados no site — conteúdo editorial do Risco Cognitivo.',
+  },
+  {
+    href: '/hub-editorial/',
+    label: 'Hub Editorial',
+    description: 'Painel de gestão do pipeline editorial (Risco Cognitivo).',
+  },
+  {
+    href: '/skills/',
+    label: 'Catálogo de Skills EXECUTAR',
+    description: 'Catálogo navegável de skills do ecossistema EXECUTAR, com busca e filtros.',
+  },
+  {
+    href: '/catalogo-offline/',
+    label: 'Catálogo EXECUTAR (offline)',
+    description: 'Versão offline do catálogo de skills, com detalhamento 3P por item.',
+  },
+];
+---
+
+<DefaultLayout title="Painel" description="Painel de acesso ao blog e às ferramentas do ecossistema EXECUTAR.">
+  <div class="py-28 lg:pt-44 lg:pb-32">
+    <div class="container">
+      <div class="mb-10 flex items-center justify-between">
+        <h1 class="text-3xl font-bold tracking-tight">Painel</h1>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {links.map((link) => (
+          <a
+            href={link.href}
+            class="bg-card text-card-foreground hover:bg-muted flex flex-col gap-2 rounded-xl border p-6 shadow-sm transition-colors"
+          >
+            <span class="text-sm font-medium tracking-tight">{link.label}</span>
+            <span class="text-muted-foreground text-sm">{link.description}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</DefaultLayout>
