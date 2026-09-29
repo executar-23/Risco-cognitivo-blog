@@ -38,9 +38,9 @@ const radii = [
   ['radius-sm (botões)', 'var(--radius-sm)'],
   ['radius-lg (base)', 'var(--radius-lg)'],
   ['radius-xl (cards)', 'var(--radius-xl)'],
-  ['callout-sm', 'var(--callout-radius-sm)'],
-  ['callout-md', 'var(--callout-radius-md)'],
-  ['callout-lg', 'var(--callout-radius-lg)'],
+  ['callout-sm (= radius-md)', 'var(--callout-radius-sm)'],
+  ['callout-md (= radius-lg)', 'var(--callout-radius-md)'],
+  ['callout-lg (= radius-xl)', 'var(--callout-radius-lg)'],
 ];
 const shadows = ['shadow-xs', 'shadow-sm', 'shadow-md', 'shadow-lg', 'shadow-xl'];
 const h2 = 'text-primary scroll-mt-28 text-4xl font-medium';
@@ -182,9 +182,17 @@ const lead = 'text-muted-foreground mt-3 max-w-2xl text-lg font-medium';
       <h2 id="callouts-title" class={h2}>Callouts</h2>
       <p class={lead}>Um único primitive, 26 variantes, 3 famílias cromáticas, 3 tamanhos e 2 tons.</p>
 
-      <h3 class="mt-10 text-xl font-medium">Referência — approved · lg</h3>
-      <div class="mt-4" data-testid="callout-reference">
-        <Callout variant="approved" size="lg" subject="Plano" message="Aprovado" />
+      <h3 class="mt-10 text-xl font-medium">Referência — approved · md</h3>
+      <p class="text-muted-foreground mt-2 text-base font-medium">
+        Mesma altura do CTA (Button lg, 40px), raio de <code>--radius</code>, glifo Lucide sem
+        contêiner, assunto em sans 700 e mensagem em <code>--font-mono</code> 400. As medidas do
+        handoff (56/32/32px) vieram de um raster 3× e equivalem a ~18/11/11px.
+      </p>
+      <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center" data-testid="callout-proportion">
+        <div class="min-w-0 flex-1" data-testid="callout-reference">
+          <Callout variant="approved" subject="Plano" message="Aprovado" />
+        </div>
+        <a href="#callouts" class={buttonVariants({ size: 'lg' })} data-testid="cta-reference">CTA · Button lg</a>
       </div>
 
       <h3 class="mt-10 text-xl font-medium">26 variantes · md · outline</h3>

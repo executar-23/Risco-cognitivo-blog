@@ -169,29 +169,30 @@
   --callout-text-strong: var(--foreground);
   --callout-text-default: var(--muted-foreground);
   --callout-border-width: 1px;
-  --callout-radius-sm: 16px;
-  --callout-radius-md: 24px;
-  --callout-radius-lg: 32px;
-  --callout-padding-sm-x: 16px;
-  --callout-padding-sm-y: 16px;
-  --callout-padding-md-x: 20px;
-  --callout-padding-md-y: 20px;
-  --callout-padding-lg-x: 32px;
-  --callout-padding-lg-y: 32px;
-  --callout-gap-sm: 12px;
-  --callout-gap-md: 16px;
-  --callout-gap-lg: 24px;
-  --callout-icon-sm: 36px;
-  --callout-icon-md: 44px;
-  --callout-icon-lg: 56px;
-  --callout-glyph-sm: 18px;
-  --callout-glyph-md: 22px;
-  --callout-glyph-lg: 28px;
-  --callout-icon-border-sm: 2px;
-  --callout-icon-border-md: 2px;
-  --callout-icon-border-lg: 3px;
-  --callout-min-height-lg: 120px;
-  --callout-font-family: var(--font-sans);
+  /* Geometry derives from the site's control tokens (Button, --radius, --spacing).
+     Handoff pixels were measured on a 3x raster (1170px = 390pt): 56/32/32 -> ~18/11/11. */
+  --callout-height-sm: calc(var(--spacing) * 9); /* = Button default (h-9) */
+  --callout-height-md: calc(var(--spacing) * 10); /* = Button lg / CTA (h-10) */
+  --callout-height-lg: calc(var(--spacing) * 12);
+  --callout-radius-sm: calc(var(--radius) - 2px); /* radius-md, = Button */
+  --callout-radius-md: var(--radius); /* radius-lg */
+  --callout-radius-lg: calc(var(--radius) * 2 - 4px); /* radius-xl, ~32/3 */
+  --callout-padding-sm-x: calc(var(--spacing) * 3);
+  --callout-padding-sm-y: calc(var(--spacing) * 1.75); /* (36 - 2 border - 20 line) / 2 */
+  --callout-padding-md-x: calc(var(--spacing) * 3);
+  --callout-padding-md-y: calc(var(--spacing) * 1.75); /* (40 - 2 - 24) / 2 */
+  --callout-padding-lg-x: calc(var(--spacing) * 4);
+  --callout-padding-lg-y: calc(var(--spacing) * 2.25); /* (48 - 2 - 28) / 2 */
+  --callout-gap-sm: calc(var(--spacing) * 1.5);
+  --callout-gap-md: calc(var(--spacing) * 2); /* = Button gap-2 */
+  --callout-gap-lg: calc(var(--spacing) * 2.5);
+  --callout-glyph-sm: calc(var(--spacing) * 4); /* = Button svg size-4 */
+  --callout-glyph-md: calc(var(--spacing) * 4.5);
+  --callout-glyph-lg: calc(var(--spacing) * 5);
+  --callout-font-family: var(--text-family);
+  --callout-label-family: var(--text-family);
+  --callout-message-family: var(--font-mono);
+  --callout-body-family: var(--text-family);
   --callout-label-weight: 700;
   --callout-message-weight: 400;
   --callout-body-weight: 400;

@@ -34,6 +34,9 @@ Guidance for Claude Code (and other AI agents) working in this repository.
   - Em MDX, descrição rica entra como filho (`<Callout ...>…</Callout>`); JSX em prop
     não funciona em MDX com React.
   - `dismissible` só funciona com diretiva `client:*`.
+  - A geometria deriva dos tokens do Button, `--radius` e `--spacing` (md = altura do CTA,
+    40px); não há escala própria. Glifo sem contêiner; assunto na fonte do texto (700) e
+    mensagem em `--font-mono` (400). As medidas do handoff são de um raster 3×.
 - **Consequências:**
   - Páginas e artigos não definem hex, raio ou ícone de callout localmente.
   - O showroom oficial é `/admin/design-system#callouts`.

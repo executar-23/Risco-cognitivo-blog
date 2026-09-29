@@ -36,38 +36,35 @@ export interface CalloutProps {
   children?: React.ReactNode;
 }
 
-// All geometry comes from --callout-* tokens (src/styles/global.css).
+// All geometry comes from --callout-* tokens (src/styles/global.css), which
+// derive from the Button/--radius/--spacing tokens: md = CTA height (h-10).
 const SIZE = {
   sm: {
     box: "rounded-[var(--callout-radius-sm)]",
     pad: "px-[var(--callout-padding-sm-x)] py-[var(--callout-padding-sm-y)]",
     gap: "gap-[var(--callout-gap-sm)]",
-    icon: "size-[var(--callout-icon-sm)] border-[length:var(--callout-icon-border-sm)]",
     glyph: "size-[var(--callout-glyph-sm)]",
-    minH: "min-h-[var(--callout-icon-sm)]",
-    headline: "text-base",
+    minH: "min-h-[calc(var(--callout-height-sm)-2*var(--callout-padding-sm-y)-2*var(--callout-border-width))]",
+    headline: "text-sm/5",
     body: "text-sm",
   },
   md: {
     box: "rounded-[var(--callout-radius-md)]",
     pad: "px-[var(--callout-padding-md-x)] py-[var(--callout-padding-md-y)]",
     gap: "gap-[var(--callout-gap-md)]",
-    icon: "size-[var(--callout-icon-md)] border-[length:var(--callout-icon-border-md)]",
     glyph: "size-[var(--callout-glyph-md)]",
-    minH: "min-h-[var(--callout-icon-md)]",
-    headline: "text-lg",
-    body: "text-base",
+    minH: "min-h-[calc(var(--callout-height-md)-2*var(--callout-padding-md-y)-2*var(--callout-border-width))]",
+    headline: "text-base/6",
+    body: "text-sm",
   },
   lg: {
-    box: "rounded-[var(--callout-radius-lg)] min-h-[var(--callout-min-height-lg)]",
-    // < 480px: lg keeps its scale but uses md padding/gap (handoff §10)
-    pad: "px-[var(--callout-padding-md-x)] py-[var(--callout-padding-md-y)] min-[480px]:px-[var(--callout-padding-lg-x)] min-[480px]:py-[var(--callout-padding-lg-y)]",
-    gap: "gap-[var(--callout-gap-md)] min-[480px]:gap-[var(--callout-gap-lg)]",
-    icon: "size-[var(--callout-icon-lg)] border-[length:var(--callout-icon-border-lg)]",
+    box: "rounded-[var(--callout-radius-lg)]",
+    pad: "px-[var(--callout-padding-lg-x)] py-[var(--callout-padding-lg-y)]",
+    gap: "gap-[var(--callout-gap-lg)]",
     glyph: "size-[var(--callout-glyph-lg)]",
-    minH: "min-h-[var(--callout-icon-lg)]",
-    headline: "text-2xl",
-    body: "text-lg",
+    minH: "min-h-[calc(var(--callout-height-lg)-2*var(--callout-padding-lg-y)-2*var(--callout-border-width))]",
+    headline: "text-lg/7",
+    body: "text-base",
   },
 } as const;
 
@@ -100,18 +97,18 @@ function Callout({
   const tinted = tone === "tinted";
   const actions = [action, secondaryAction].filter(Boolean) as CalloutAction[];
 
+  // Bare Lucide glyph (no badge), vertically centred on the first line.
   const iconBadge = (
-    <span
-      aria-hidden="true"
-      className={cn(
-        "grid shrink-0 place-items-center rounded-full",
-        s.icon,
-        tinted
-          ? "border-current text-[var(--callout-header-text)]"
-          : "border-[color:var(--callout-icon)] bg-[var(--callout-icon-surface)] text-[var(--callout-icon)]",
-      )}
-    >
-      <Icon className={s.glyph} strokeWidth={2.25} />
+    <span aria-hidden="true" className={cn("flex shrink-0 items-center", s.minH)}>
+      <Icon
+        className={cn(
+          s.glyph,
+          tinted
+            ? "text-[var(--callout-header-text)]"
+            : "text-[var(--callout-icon)]",
+        )}
+        strokeWidth={2}
+      />
     </span>
   );
 
@@ -120,15 +117,17 @@ function Callout({
       <Skeleton className="h-4 w-2/5" />
     </span>
   ) : (
-    <p className={cn("m-0 leading-snug", s.headline)}>
+    <p className={cn("m-0", s.headline)}>
       {subject && (
-        <strong className="font-[number:var(--callout-label-weight)]">
+        <strong className="leading-none font-[family-name:var(--callout-label-family)] font-[number:var(--callout-label-weight)]">
           {subject}
         </strong>
       )}
       {subject && text ? " " : null}
       {text && (
-        <span className="font-[number:var(--callout-message-weight)]">{text}</span>
+        <span className="leading-none font-[family-name:var(--callout-message-family)] font-[number:var(--callout-message-weight)]">
+          {text}
+        </span>
       )}
     </p>
   );
@@ -145,16 +144,16 @@ function Callout({
           {description && (
             <div
               className={cn(
-                "text-[var(--callout-body)] font-[number:var(--callout-body-weight)] [&_a]:text-[var(--callout-link)] [&_a]:underline [&_p]:m-0",
+                "text-[var(--callout-body)] font-[family-name:var(--callout-body-family)] font-[number:var(--callout-body-weight)] [&_a]:text-[var(--callout-link)] [&_a]:underline [&_p]:m-0",
                 s.body,
-                !tinted && "mt-2",
+                !tinted && "mt-1",
               )}
             >
               {description}
             </div>
           )}
           {actions.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
               {actions.map((a, i) => {
                 const cls = buttonVariants({
                   variant: i === 0 ? "default" : "outline",

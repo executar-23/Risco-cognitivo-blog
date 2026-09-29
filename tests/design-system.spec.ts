@@ -55,21 +55,39 @@ test.describe("Callout — visual regression", () => {
   }
 });
 
-test("reference approved/lg matches the handoff geometry", async ({ page }) => {
+test("reference approved/md derives from Button/radius/font tokens", async ({ page }) => {
   await page.goto(SHOWROOM);
   const m = await page.locator("[data-testid=callout-reference] [data-callout]").evaluate((el) => {
     const row = el.firstElementChild as HTMLElement;
-    const icon = el.querySelector("[aria-hidden=true]") as HTMLElement;
+    const glyph = el.querySelector("svg") as SVGElement;
+    const subject = getComputedStyle(el.querySelector("strong")!);
+    const message = getComputedStyle(el.querySelector("p span")!);
     return {
+      height: Math.round(el.getBoundingClientRect().height),
       radius: getComputedStyle(el).borderRadius,
       padding: getComputedStyle(row).paddingLeft,
       gap: getComputedStyle(row).columnGap,
-      icon: getComputedStyle(icon).width,
-      subject: getComputedStyle(el.querySelector("strong")!).fontWeight,
-      message: getComputedStyle(el.querySelector("p span")!).fontWeight,
+      glyph: getComputedStyle(glyph).width,
+      subject: subject.fontWeight,
+      message: message.fontWeight,
+      subjectMono: /mono/i.test(subject.fontFamily),
+      messageMono: /mono/i.test(message.fontFamily),
     };
   });
-  expect(m).toEqual({ radius: "32px", padding: "32px", gap: "24px", icon: "56px", subject: "700", message: "400" });
+  expect(m).toEqual({
+    height: 40,
+    radius: "8px",
+    padding: "12px",
+    gap: "8px",
+    glyph: "18px",
+    subject: "700",
+    message: "400",
+    subjectMono: false,
+    messageMono: true,
+  });
+  // same height as the CTA button (Button lg)
+  const cta = await page.getByTestId("cta-reference").boundingBox();
+  expect(Math.round(cta!.height)).toBe(m.height);
 });
 
 test("26 variants, one symbol each, 3 families only", async ({ page }) => {

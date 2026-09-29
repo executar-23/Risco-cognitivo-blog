@@ -31,6 +31,8 @@ Variante de referência: **Plano Aprovado**.
 | Prefixo "Plano" | bold | font-callout-emphasis |
 | "Aprovado" | regular | font-callout-text |
 
+> **Correção v1.1:** o raster é 3× (1170 px = 390 pt). Em CSS px a referência é ~40 px de altura, raio ~11, padding ~11, glifo ~18, texto ~16–17 px — a mesma altura do CTA (`Button size="lg"`, h-10). A mensagem usa fonte monoespaçada.
+
 Cores aproximadas do raster: azul #304E83, texto forte #141414, texto secundário #3A3A39, fundo #FFFFFF, borda neutra ~#D8D8D4, fundo externo ~#F8F8F6. São evidência; no código só existem via aliases de tokens.
 
 ## 2. Anatomia canônica
@@ -99,15 +101,17 @@ Neutros pertencem ao Design System global. Confirmação permanece azul. Contras
 
 ## 5. Tokens canônicos
 
-Ver `src/styles/global.css` (bloco `DS-CALLOUT-001`): acentos, superfícies, texto, borda (1px), raios 16/24/32, paddings 16/20/32, gaps 12/16/24, ícones 36/44/56, glifos 18/22/28, borda do ícone 2/2/3, pesos 700/400/400, motion 120/180 ms + `cubic-bezier(.2,0,0,1)`, foco 2px + offset 2px, largura 100%.
+Ver `src/styles/global.css` (bloco `DS-CALLOUT-001`): acentos, superfícies, texto, borda (1px), geometria derivada dos tokens do site (ver §6), pesos 700/400/400, motion 120/180 ms + `cubic-bezier(.2,0,0,1)`, foco 2px + offset 2px, largura 100%.
 
-## 6. Sizes
+## 6. Sizes (v1.1 — derivados dos tokens do Button, `--radius` e `--spacing`)
 
-| size | ícone | glifo | padding | gap | raio | extra |
+| size | altura mín. | glifo | padding x / y | gap | raio | texto (headline/linha) |
 |---|---|---|---|---|---|---|
-| sm | 36 | 18 | 16 | 12 | 16 | cards, sidebars |
-| md (padrão) | 44 | 22 | 20 | 16 | 24 | artigos |
-| lg / display | 56 | 28 | 32 | 24 | 32 | min-height 120; reproduz a referência |
+| sm | 36 (= Button default) | 16 (= svg do Button) | 12 / 7 | 6 | radius-md (6) | 14/20 |
+| md (padrão) | 40 (= Button lg / CTA) | 18 | 12 / 7 | 8 (= Button) | radius-lg (8) | 16/24 |
+| lg | 48 | 20 | 16 / 9 | 10 | radius-xl (12) | 18/28 |
+
+Glifo Lucide sem contêiner circular. Assunto: fonte do texto, 700. Mensagem: `--font-mono`, 400. Descrição: fonte do texto, um passo menor que o headline.
 
 ## 7. API / Props
 
@@ -172,7 +176,7 @@ Ver `src/components/ui/callout.tsx` (`CalloutProps`) e `callout-registry.ts` (`C
 ## 16. Uso da referência
 
 ```tsx
-<Callout variant="approved" size="lg" subject="Plano" message="Aprovado" />
+<Callout variant="approved" subject="Plano" message="Aprovado" />
 ```
 
 ## 17. Critérios de aceite — estado da implementação
@@ -182,7 +186,7 @@ Ver `src/components/ui/callout.tsx` (`CalloutProps`) e `callout-registry.ts` (`C
 - [x] cada variante possui exatamente um símbolo padrão
 - [x] somente três acentos cromáticos são utilizados
 - [x] nenhuma página define hex, ícone ou radius localmente
-- [x] approved/lg reproduz a referência (medido: raio 32, padding 32, gap 24, ícone 56, 700/400)
+- [x] approved/md reproduz a referência (medido: altura 40 = CTA, raio 8, padding 12, gap 8, glifo 18, 700 sans / 400 mono)
 - [x] sm, md e lg documentados (`/admin/design-system#callouts`)
 - [x] responsivo validado em 320, 375, 768, 1024 e 1440 px (testes Playwright)
 - [x] teclado e leitor de tela (axe + teste de teclado automatizados)
