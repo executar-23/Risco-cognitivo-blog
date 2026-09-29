@@ -1,0 +1,234 @@
+---
+import { ComponentGallery } from '@/components/design-system/component-gallery';
+import { buttonVariants } from '@/components/ui/button';
+import { Callout } from '@/components/ui/callout';
+import { CALLOUT_VARIANTS, CALLOUT_VARIANT_NAMES } from '@/components/ui/callout-registry';
+import DefaultLayout from '@/layouts/DefaultLayout.astro';
+import { cn } from '@/lib/utils';
+
+const ARTICLE = '/blog/do-risco-cognitivo-a-execucao-assistida/';
+const sections = [
+  { id: 'moodboard', label: 'Mood board' },
+  { id: 'storyboard', label: 'Storyboard' },
+  { id: 'tokens', label: 'Tokens' },
+  { id: 'callouts', label: 'Callouts' },
+  { id: 'componentes', label: 'Componentes' },
+];
+const families = ['brand', 'attention', 'critical'] as const;
+const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+const roles = ['subtle', 'soft', 'default', 'strong', 'on-strong'];
+const neutrals = [
+  ['background', '--background'],
+  ['card', '--card'],
+  ['muted', '--muted'],
+  ['border', '--border'],
+  ['muted-foreground', '--muted-foreground'],
+  ['foreground', '--foreground'],
+  ['primary (site)', '--primary'],
+];
+const storyboard = [
+  { n: '01', title: 'Blog — início', route: '/blog/', image: '/about/1.webp', uses: 'Hero, Button, cards de território, filtros' },
+  { n: '02', title: 'Territórios', route: '/blog/#territorios-title', image: '/about/2.webp', uses: 'Filtro (Button outline sm), cards' },
+  { n: '03', title: 'Artigo', route: ARTICLE, image: '/blog/do-risco-cognitivo-a-execucao-assistida/hero.jpg', uses: 'Prose, capitular, Callout (decision, question, quote, example, note)' },
+  { n: '04', title: 'Painel', route: '/admin', image: '/about/3.webp', uses: 'Cards de acesso, Design System' },
+  { n: '05', title: 'Hub e catálogos', route: '/hub-editorial/', image: '/about/4.webp', uses: 'Ferramentas autônomas (Hub, Skills, Catálogo offline)' },
+];
+const spacing = [4, 8, 12, 16, 20, 24, 32, 48, 64];
+const radii = [
+  ['radius-sm (botões)', 'var(--radius-sm)'],
+  ['radius-lg (base)', 'var(--radius-lg)'],
+  ['radius-xl (cards)', 'var(--radius-xl)'],
+  ['callout-sm', 'var(--callout-radius-sm)'],
+  ['callout-md', 'var(--callout-radius-md)'],
+  ['callout-lg', 'var(--callout-radius-lg)'],
+];
+const shadows = ['shadow-xs', 'shadow-sm', 'shadow-md', 'shadow-lg', 'shadow-xl'];
+const h2 = 'text-primary scroll-mt-28 text-4xl font-medium';
+const lead = 'text-muted-foreground mt-3 max-w-2xl text-lg font-medium';
+---
+
+<DefaultLayout title="Design System" description="Mood board, storyboard, tokens e componentes do Risco Cognitivo.">
+  <div class="container max-w-5xl pt-32 pb-24 lg:pt-44">
+    <p class="text-muted-foreground text-sm font-medium"><a href="/admin" class="hover:underline">Painel</a> / Design System</p>
+    <h1 class="mt-2 text-3xl tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">Design System</h1>
+    <p class={lead}>
+      Fonte de verdade visual do blog: referências, fluxo, tokens e todos os componentes. Callouts seguem
+      DS-CALLOUT-001 e o anexo de paleta DS-CALLOUT-001-PAL-ANNEX-01.
+    </p>
+    <nav aria-label="Seções" class="mt-8 flex flex-wrap gap-2">
+      {sections.map((s) => <a href={`#${s.id}`} class={buttonVariants({ variant: 'outline', size: 'sm' })}>{s.label}</a>)}
+    </nav>
+
+    <!-- Mood board -->
+    <section id="moodboard" class="mt-20" aria-labelledby="moodboard-title">
+      <h2 id="moodboard-title" class={h2}>Mood board</h2>
+      <p class={lead}>Imagens em uso, cores e tipografia que definem o tom editorial.</p>
+      <div class="mt-8 grid grid-cols-6 grid-rows-2 gap-3">
+        <img src="/blog/do-risco-cognitivo-a-execucao-assistida/hero.jpg" alt="Arte da tecla Ctrl" class="col-span-3 row-span-2 aspect-[4/5] w-full rounded-2xl object-cover sm:col-span-2" />
+        <img src="/about/1.webp" alt="" class="col-span-3 h-full w-full rounded-2xl object-cover sm:col-span-2" />
+        <div class="col-span-3 flex flex-col justify-between rounded-2xl p-5 sm:col-span-2" style="background: var(--color-brand-strong); color: var(--color-brand-on-strong)">
+          <span class="text-sm font-medium opacity-80">Display · DM Sans</span>
+          <span class="text-4xl font-medium tracking-tight">Aa</span>
+        </div>
+        <div class="col-span-3 grid grid-cols-3 overflow-hidden rounded-2xl sm:col-span-2">
+          <span style="background: var(--color-brand-default)"></span>
+          <span style="background: var(--color-attention-default)"></span>
+          <span style="background: var(--color-critical-default)"></span>
+        </div>
+        <img src="/about/4.webp" alt="" class="col-span-3 h-full w-full rounded-2xl object-cover sm:col-span-2" />
+      </div>
+    </section>
+
+    <!-- Storyboard -->
+    <section id="storyboard" class="mt-20" aria-labelledby="storyboard-title">
+      <h2 id="storyboard-title" class={h2}>Storyboard</h2>
+      <p class={lead}>A jornada do leitor, quadro a quadro, com os componentes de cada etapa.</p>
+      <ol class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {storyboard.map((f) => (
+          <li class="bg-card overflow-hidden rounded-2xl border">
+            <img src={f.image} alt="" loading="lazy" class="aspect-video w-full object-cover" />
+            <div class="p-5">
+              <p class="text-primary text-sm font-medium">{f.n}</p>
+              <h3 class="mt-1 text-lg font-medium">{f.title}</h3>
+              <p class="text-muted-foreground mt-1 text-sm">{f.uses}</p>
+              <a href={f.route} class={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'mt-4')}>Abrir</a>
+              <p class="text-muted-foreground mt-2 font-mono text-xs break-all">{f.route}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- Tokens -->
+    <section id="tokens" class="mt-20" aria-labelledby="tokens-title">
+      <h2 id="tokens-title" class={h2}>Tokens</h2>
+      <p class={lead}>Quatro camadas: primitivo → semântico → componente → variante. Valores concretos só existem na camada primitiva.</p>
+
+      <h3 class="mt-10 text-xl font-medium">Primitivos (3 famílias × 11 passos)</h3>
+      <div class="mt-4 flex flex-col gap-3">
+        {families.map((f) => (
+          <div>
+            <p class="text-muted-foreground mb-2 font-mono text-xs">{f}</p>
+            <div class="grid grid-cols-11 overflow-hidden rounded-xl border">
+              {steps.map((st) => (
+                <div class="flex h-14 items-end p-1" style={`background: var(--${f}-${st}); color: ${st >= 500 ? 'white' : 'black'}`}>
+                  <span class="font-mono text-[10px]">{st}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Papéis semânticos</h3>
+      <p class="text-muted-foreground mt-1 text-sm">Alterne o tema no menu para ver os valores provisórios do modo escuro.</p>
+      <div class="mt-4 grid gap-4 md:grid-cols-3">
+        {families.map((f) => (
+          <div class="overflow-hidden rounded-xl border">
+            {roles.map((r) => (
+              <div class="flex items-center gap-3 border-b p-3 last:border-b-0">
+                <span class="size-8 shrink-0 rounded-md border" style={`background: var(--color-${f}-${r})`}></span>
+                <span class="font-mono text-xs">--color-{f}-{r}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Neutros (infraestrutura)</h3>
+      <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {neutrals.map(([name, v]) => (
+          <div class="flex items-center gap-3">
+            <span class="size-10 shrink-0 rounded-lg border" style={`background: var(${v})`}></span>
+            <span class="font-mono text-xs">{name}</span>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Tipografia</h3>
+      <div class="mt-4 flex flex-col gap-6 rounded-2xl border p-6">
+        <div><p class="text-muted-foreground font-mono text-xs">h1 · display</p><p class="text-3xl tracking-tight sm:text-4xl md:text-5xl lg:text-6xl" style="font-family: var(--font-display); font-weight: var(--display-weight)">Do risco à execução</p></div>
+        <div><p class="text-muted-foreground font-mono text-xs">h2 · seção</p><p class="text-primary text-4xl font-medium" style="font-family: var(--font-display)">Territórios</p></div>
+        <div><p class="text-muted-foreground font-mono text-xs">corpo · text-lg 500</p><p class="text-muted-foreground max-w-xl text-lg font-medium">Compreender o problema. Redesenhar o trabalho. Criar condições para executar.</p></div>
+        <div><p class="text-muted-foreground font-mono text-xs">callout · 700 / 400</p><p class="text-lg"><strong class="font-bold">Plano</strong> Aprovado</p></div>
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Espaçamento, raios, sombras, movimento</h3>
+      <div class="mt-4 grid gap-6 md:grid-cols-2">
+        <div class="flex flex-col gap-2 rounded-2xl border p-5">
+          {spacing.map((px) => (
+            <div class="flex items-center gap-3"><span class="font-mono text-xs w-10">{px}px</span><span class="bg-primary h-3 rounded-sm" style={`width: ${px * 3}px`}></span></div>
+          ))}
+        </div>
+        <div class="grid grid-cols-3 gap-3 rounded-2xl border p-5">
+          {radii.map(([n, v]) => (
+            <div class="flex flex-col items-center gap-2"><span class="bg-muted size-14 border" style={`border-radius: ${v}`}></span><span class="text-center font-mono text-[10px]">{n}</span></div>
+          ))}
+        </div>
+        <div class="flex flex-wrap gap-4 rounded-2xl border p-5">
+          {shadows.map((sh) => <span class={cn('bg-card grid size-20 place-items-center rounded-xl font-mono text-[10px]', sh)}>{sh}</span>)}
+        </div>
+        <div class="flex flex-col gap-2 rounded-2xl border p-5 font-mono text-xs">
+          <span>--callout-motion-fast: 120ms</span>
+          <span>--callout-motion-default: 180ms</span>
+          <span>--callout-easing: cubic-bezier(0.2, 0, 0, 1)</span>
+          <span>prefers-reduced-motion: transições removidas</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Callouts -->
+    <section id="callouts" class="mt-20" aria-labelledby="callouts-title">
+      <h2 id="callouts-title" class={h2}>Callouts</h2>
+      <p class={lead}>Um único primitive, 26 variantes, 3 famílias cromáticas, 3 tamanhos e 2 tons.</p>
+
+      <h3 class="mt-10 text-xl font-medium">Referência — approved · lg</h3>
+      <div class="mt-4" data-testid="callout-reference">
+        <Callout variant="approved" size="lg" subject="Plano" message="Aprovado" />
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">26 variantes · md · outline</h3>
+      <div class="mt-4 grid gap-3 md:grid-cols-2" data-testid="callout-variants">
+        {CALLOUT_VARIANT_NAMES.map((v) => (
+          <Callout variant={v} subject={v} message={CALLOUT_VARIANTS[v].label} description={`Família ${CALLOUT_VARIANTS[v].family}.`} />
+        ))}
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Tamanhos</h3>
+      <div class="mt-4 flex flex-col gap-3">
+        <Callout variant="info" size="sm" subject="sm" message="cards e barras laterais" />
+        <Callout variant="info" size="md" subject="md" message="padrão editorial" />
+        <Callout variant="info" size="lg" subject="lg" message="display" />
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Tons · outline × tinted por família</h3>
+      <div class="mt-4 grid gap-3 md:grid-cols-2">
+        <Callout variant="decision" tone="outline" subject="Decisão" message="registrada" description="Superfície neutra, acento brand." />
+        <Callout variant="decision" tone="tinted" subject="Decisão" message="registrada" description="Header brand.strong, corpo brand.subtle." />
+        <Callout variant="warning" tone="outline" subject="Aviso" message="revise antes de publicar" description="Família attention." />
+        <Callout variant="warning" tone="tinted" subject="Aviso" message="revise antes de publicar" description="Família attention." />
+        <Callout variant="error" tone="outline" subject="Erro" message="falha na importação" description="Família critical." />
+        <Callout variant="error" tone="tinted" subject="Erro" message="falha na importação" description="Família critical." />
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Estados</h3>
+      <div class="mt-4 grid gap-3 md:grid-cols-2" data-testid="callout-states">
+        <Callout variant="next-step" subject="Próximo passo" message="Publicar o artigo" description="Com ações (máximo 2)." action={{ label: 'Publicar', href: '/blog' }} secondaryAction={{ label: 'Rever', href: ARTICLE }} />
+        <Callout variant="pending" subject="Pendente" message="aguardando revisão" description="Ações desabilitadas." action={{ label: 'Publicar' }} disabled />
+        <Callout variant="data" subject="Dados" message="carregando" loading />
+        <Callout client:visible variant="attention" subject="Atenção" message="pode ser fechado" description="dismissible: remove o callout do fluxo." dismissible />
+        <Callout variant="research" subject="Pesquisa" message="Texto longo que quebra naturalmente em várias linhas sem reticências, mantendo o símbolo alinhado ao início do conteúdo quando passa de uma linha." />
+        <Callout variant="evidence" subject="Evidência" message="Confirmada" />
+      </div>
+    </section>
+
+    <!-- Componentes -->
+    <section id="componentes" class="mt-20" aria-labelledby="componentes-title">
+      <h2 id="componentes-title" class={h2}>Componentes</h2>
+      <p class={lead}>Todos os primitivos de <code>src/components/ui</code>, agrupados por família.</p>
+      <div class="mt-8">
+        <ComponentGallery client:visible />
+      </div>
+    </section>
+  </div>
+</DefaultLayout>

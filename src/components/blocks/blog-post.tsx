@@ -41,7 +41,7 @@ const BlogPost = ({
         </div>
       </div>
       <div className="container max-w-5xl">
-        <div className="prose prose-lg dark:prose-invert prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-foreground prose-h2:text-primary prose-h2:text-4xl prose-p:text-muted-foreground prose-p:font-medium prose-li:text-muted-foreground prose-li:font-medium prose-strong:text-foreground prose-a:text-primary prose-blockquote:text-primary prose-blockquote:font-medium prose-blockquote:border-primary prose-img:rounded-2xl mx-auto max-w-2xl">
+        <div className="prose prose-lg dark:prose-invert prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-foreground prose-h2:text-primary prose-h2:text-3xl md:prose-h2:text-4xl prose-headings:break-words prose-p:text-muted-foreground prose-p:font-medium prose-li:text-muted-foreground prose-li:font-medium prose-strong:text-foreground prose-a:text-primary prose-blockquote:text-primary prose-blockquote:font-medium prose-blockquote:border-primary prose-img:rounded-2xl prose-table:block prose-table:overflow-x-auto mx-auto max-w-2xl">
           {children}
         </div>
       </div>

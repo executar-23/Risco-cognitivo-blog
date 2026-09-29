@@ -105,6 +105,103 @@
   --text-family: var(--font-inter);
   --display-weight: 600;
   --text-weight: 400;
+
+  /* ===== DS-CALLOUT-001 / PAL-ANNEX-01 ===== */
+  /* Layer 1 — primitives: the only place with concrete colour values.
+     Step 600 of each scale is the handoff hex (#304E83, #8A5A00, #A33A32). */
+  --brand-50: oklch(0.975 0.011 261.01);
+  --brand-100: oklch(0.948 0.021 261.01);
+  --brand-200: oklch(0.900 0.038 261.01);
+  --brand-300: oklch(0.830 0.059 261.01);
+  --brand-400: oklch(0.720 0.081 261.01);
+  --brand-500: oklch(0.574 0.093 261.01);
+  --brand-600: oklch(0.428 0.095 261.01);
+  --brand-700: oklch(0.368 0.091 261.01);
+  --brand-800: oklch(0.308 0.081 261.01);
+  --brand-900: oklch(0.248 0.069 261.01);
+  --brand-950: oklch(0.198 0.057 261.01);
+
+  --attention-50: oklch(0.975 0.013 73.30);
+  --attention-100: oklch(0.948 0.024 73.30);
+  --attention-200: oklch(0.900 0.043 73.30);
+  --attention-300: oklch(0.830 0.067 73.30);
+  --attention-400: oklch(0.720 0.092 73.30);
+  --attention-500: oklch(0.614 0.105 73.30);
+  --attention-600: oklch(0.508 0.108 73.30);
+  --attention-700: oklch(0.448 0.095 73.30);
+  --attention-800: oklch(0.388 0.082 73.30);
+  --attention-900: oklch(0.328 0.070 73.30);
+  --attention-950: oklch(0.278 0.059 73.30);
+
+  --critical-50: oklch(0.975 0.012 27.67);
+  --critical-100: oklch(0.948 0.026 27.67);
+  --critical-200: oklch(0.900 0.051 27.67);
+  --critical-300: oklch(0.830 0.087 27.67);
+  --critical-400: oklch(0.720 0.120 27.67);
+  --critical-500: oklch(0.608 0.136 27.67);
+  --critical-600: oklch(0.496 0.141 27.67);
+  --critical-700: oklch(0.436 0.134 27.67);
+  --critical-800: oklch(0.376 0.120 27.67);
+  --critical-900: oklch(0.316 0.101 27.67);
+  --critical-950: oklch(0.266 0.084 27.67);
+
+  /* Layer 2 — semantic roles per family (subtle/soft/default/strong/on-strong) */
+  --color-brand-subtle: var(--brand-100);
+  --color-brand-soft: var(--brand-300);
+  --color-brand-default: var(--brand-600);
+  --color-brand-strong: var(--brand-900);
+  --color-brand-on-strong: oklch(1 0 0);
+  --color-attention-subtle: var(--attention-100);
+  --color-attention-soft: var(--attention-300);
+  --color-attention-default: var(--attention-600);
+  --color-attention-strong: var(--attention-900);
+  --color-attention-on-strong: oklch(1 0 0);
+  --color-critical-subtle: var(--critical-100);
+  --color-critical-soft: var(--critical-300);
+  --color-critical-default: var(--critical-600);
+  --color-critical-strong: var(--critical-900);
+  --color-critical-on-strong: oklch(1 0 0);
+
+  /* Layer 3 — callout component tokens (handoff §5) */
+  --callout-accent-blue: var(--color-brand-default);
+  --callout-accent-amber: var(--color-attention-default);
+  --callout-accent-red: var(--color-critical-default);
+  --callout-text-strong: var(--foreground);
+  --callout-text-default: var(--muted-foreground);
+  --callout-border-width: 1px;
+  --callout-radius-sm: 16px;
+  --callout-radius-md: 24px;
+  --callout-radius-lg: 32px;
+  --callout-padding-sm-x: 16px;
+  --callout-padding-sm-y: 16px;
+  --callout-padding-md-x: 20px;
+  --callout-padding-md-y: 20px;
+  --callout-padding-lg-x: 32px;
+  --callout-padding-lg-y: 32px;
+  --callout-gap-sm: 12px;
+  --callout-gap-md: 16px;
+  --callout-gap-lg: 24px;
+  --callout-icon-sm: 36px;
+  --callout-icon-md: 44px;
+  --callout-icon-lg: 56px;
+  --callout-glyph-sm: 18px;
+  --callout-glyph-md: 22px;
+  --callout-glyph-lg: 28px;
+  --callout-icon-border-sm: 2px;
+  --callout-icon-border-md: 2px;
+  --callout-icon-border-lg: 3px;
+  --callout-min-height-lg: 120px;
+  --callout-font-family: var(--font-sans);
+  --callout-label-weight: 700;
+  --callout-message-weight: 400;
+  --callout-body-weight: 400;
+  --callout-motion-fast: 120ms;
+  --callout-motion-default: 180ms;
+  --callout-easing: cubic-bezier(0.2, 0, 0, 1);
+  --callout-focus-width: 2px;
+  --callout-focus-offset: 2px;
+  --callout-width: 100%;
+  --callout-max-width: 100%;
 }
 
 .dark {
@@ -142,6 +239,21 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* PROVISIONAL — no dark spec in DS-CALLOUT-001; same families, roles inverted
+     for a dark canvas. Replace when a dark theme spec exists. */
+  --color-brand-subtle: var(--brand-950);
+  --color-brand-soft: var(--brand-800);
+  --color-brand-default: var(--brand-300);
+  --color-brand-strong: var(--brand-700);
+  --color-attention-subtle: var(--attention-950);
+  --color-attention-soft: var(--attention-800);
+  --color-attention-default: var(--attention-300);
+  --color-attention-strong: var(--attention-700);
+  --color-critical-subtle: var(--critical-950);
+  --color-critical-soft: var(--critical-800);
+  --color-critical-default: var(--critical-300);
+  --color-critical-strong: var(--critical-700);
 }
 
 @theme inline {
@@ -328,5 +440,52 @@ body {
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+/* DS-CALLOUT-001 — family and tone wiring (layer 4). Variants never map to a
+   colour directly: the primitive sets data-family and data-tone only. */
+[data-callout] {
+  --callout-surface: var(--card);
+  --callout-border: var(--border);
+  --callout-heading: var(--callout-text-strong);
+  --callout-body: var(--callout-text-default);
+  --callout-icon-surface: var(--card);
+}
+[data-callout][data-family="brand"] {
+  --callout-icon: var(--color-brand-default);
+  --callout-link: var(--color-brand-default);
+  --callout-surface-emphasis: var(--color-brand-subtle);
+  --callout-border-emphasis: var(--color-brand-soft);
+  --callout-header-surface: var(--color-brand-strong);
+  --callout-header-text: var(--color-brand-on-strong);
+}
+[data-callout][data-family="attention"] {
+  --callout-icon: var(--color-attention-default);
+  --callout-link: var(--color-attention-default);
+  --callout-surface-emphasis: var(--color-attention-subtle);
+  --callout-border-emphasis: var(--color-attention-soft);
+  --callout-header-surface: var(--color-attention-strong);
+  --callout-header-text: var(--color-attention-on-strong);
+}
+[data-callout][data-family="critical"] {
+  --callout-icon: var(--color-critical-default);
+  --callout-link: var(--color-critical-default);
+  --callout-surface-emphasis: var(--color-critical-subtle);
+  --callout-border-emphasis: var(--color-critical-soft);
+  --callout-header-surface: var(--color-critical-strong);
+  --callout-header-text: var(--color-critical-on-strong);
+}
+[data-callout][data-tone="tinted"] {
+  --callout-surface: var(--callout-surface-emphasis);
+  --callout-border: var(--callout-border-emphasis);
+  --callout-heading: var(--foreground);
+  --callout-body: var(--foreground);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-callout],
+  [data-callout] * {
+    transition: none !important;
+    animation: none !important;
   }
 }
