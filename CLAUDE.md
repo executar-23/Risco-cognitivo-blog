@@ -90,3 +90,23 @@ Guidance for Claude Code (and other AI agents) working in this repository.
   - Gráficos novos usam `ChartContainer` com `var(--chart-N)`; não definir cor localmente.
   - Alterar a paleta de gráficos mexe só nos tokens, não nas páginas.
 
+### ADR-05: Store em `/loja` com marcadores de área (ADR-STORE-ROUTES-UI-001)
+
+- **Status:** Aceita — primeira versão implementada com dados de exemplo
+- **Contexto:** Decisão em `docs/adr/ADR-STORE-ROUTES-UI-001.md`; workflow executável em
+  `docs/agent-prompts/DEV-STORE-ROUTES-001.md`; handoff e mapas em `docs/handoff/`.
+- **Decisão:**
+  - Rotas `/loja`, `/loja/{skills,agentes,prompts,ebooks,pdfs,html,workbooks,assets}` e
+    `/loja/:type/:slug`, todas sobre a ilha `StoreCatalog` (`src/features/store`).
+  - Dados só via `src/features/store/data/repository.ts`; o mock (`mock-items.ts`) nunca é
+    importado por componentes.
+  - Cor = área (`--area-*`, `area-tokens.ts`): institucional=brand, artigos=attention,
+    skills=verde. Marcador (ícone, `border-l-4`, badge), nunca card inteiro colorido, sempre
+    com texto/ícone.
+  - Só primitives de `src/components/ui`; a Store compõe, não duplica.
+- **Consequências:**
+  - Verde, verde-azulado e violeta existem **apenas** como `--area-*` — exceção controlada ao
+    ADR-03, que continua valendo para callouts e gráficos.
+  - Nova área exige registro em `docs/handoff/store-routes/AREA-COLOR-MAP.md` antes do uso.
+  - Trocar mock por backend toca só `repository.ts` e `types/`.
+
