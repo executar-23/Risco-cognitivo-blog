@@ -63,3 +63,30 @@ Guidance for Claude Code (and other AI agents) working in this repository.
 - **Consequências:**
   - Não criar cores novas (lavender, purple etc.). Tons claros vêm de `--color-brand-subtle`.
   - Recalibrar a aparência mexe só na camada primitiva, sem tocar em artigos.
+
+### ADR-04: Dados e gráficos nos tokens do sistema (DS-DATA-001)
+
+- **Status:** Aceita — implementada
+- **Contexto:** Os `--chart-1…5` eram cores padrão do template (laranja, verde-água), fora
+  das 3 famílias do ADR-03, e não havia showroom de dados. Especificação em
+  `docs/design-system/DS-DATA-001.md`.
+- **Decisão:**
+  - A paleta de gráficos é uma camada semântica sobre as famílias e o neutro:
+    `--chart-1` brand.default, `--chart-2` attention.default, `--chart-3` critical.default,
+    `--chart-4` `--brand-500` (série única clara), `--chart-5` `--muted-foreground`
+    (meta/referência). Nenhuma matiz nova; cada cor tem contraste ≥ 3:1 sobre `--card`
+    no claro e no escuro.
+  - Séries nunca se distinguem só por cor: legenda, tooltip e, em linhas de referência,
+    traço tracejado. Todo gráfico tem `role="group"` + `aria-label` e, quando possível,
+    alternativa em tabela.
+  - `--muted-foreground-subtle` é o cinza extra do texto (legendas, notas, carimbos de
+    data). Só é AA sobre `card`, `background` e `popover`; sobre `muted`, `secondary` e
+    `accent` use `--muted-foreground`.
+  - Novo papel semântico por família `--color-{família}-on-default` (texto sobre a cor
+    `default`, usado na ação primária dos callouts).
+  - O showroom oficial é `/admin/design-system#dados` (indicadores, 6 tipos de gráfico,
+    tabela de dados, estados de carregando/vazio/erro).
+- **Consequências:**
+  - Gráficos novos usam `ChartContainer` com `var(--chart-N)`; não definir cor localmente.
+  - Alterar a paleta de gráficos mexe só nos tokens, não nas páginas.
+

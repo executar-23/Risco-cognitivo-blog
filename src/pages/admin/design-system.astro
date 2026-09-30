@@ -1,5 +1,6 @@
 ---
 import { ComponentGallery } from '@/components/design-system/component-gallery';
+import { DataGallery } from '@/components/design-system/data-gallery';
 import { buttonVariants } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { CALLOUT_VARIANTS, CALLOUT_VARIANT_NAMES } from '@/components/ui/callout-registry';
@@ -12,6 +13,7 @@ const sections = [
   { id: 'storyboard', label: 'Storyboard' },
   { id: 'tokens', label: 'Tokens' },
   { id: 'callouts', label: 'Callouts' },
+  { id: 'dados', label: 'Dados e charts' },
   { id: 'componentes', label: 'Componentes' },
 ];
 const families = ['brand', 'attention', 'critical'] as const;
@@ -25,6 +27,26 @@ const neutrals = [
   ['muted-foreground', '--muted-foreground'],
   ['foreground', '--foreground'],
   ['primary (site)', '--primary'],
+];
+const surfaces = [
+  { name: 'background', v: '--background', extra: true },
+  { name: 'card', v: '--card', extra: true },
+  { name: 'popover', v: '--popover', extra: true },
+  { name: 'muted', v: '--muted', extra: false },
+  { name: 'secondary', v: '--secondary', extra: false },
+  { name: 'accent', v: '--accent', extra: false },
+];
+const textLadder = [
+  ['foreground', '--foreground', 'títulos, valores, texto principal'],
+  ['muted-foreground', '--muted-foreground', 'descrições, corpo secundário, eixos'],
+  ['muted-foreground-subtle', '--muted-foreground-subtle', 'legendas, notas, carimbos de data — só sobre card/background/popover'],
+];
+const chartPalette = [
+  ['chart-1', 'brand.default', 'série principal'],
+  ['chart-2', 'attention.default', 'segunda série'],
+  ['chart-3', 'critical.default', 'terceira série / risco'],
+  ['chart-4', 'brand.500 (primitivo)', 'série única clara (radar, áreas)'],
+  ['chart-5', 'muted-foreground', 'meta e referência (traço tracejado)'],
 ];
 const storyboard = [
   { n: '01', title: 'Blog — início', route: '/blog/', image: '/about/1.webp', uses: 'Hero, Button, cards de território, filtros' },
@@ -111,7 +133,7 @@ const lead = 'text-muted-foreground mt-3 max-w-2xl text-lg font-medium';
             <p class="text-muted-foreground mb-2 font-mono text-xs">{f}</p>
             <div class="grid grid-cols-11 overflow-hidden rounded-xl border">
               {steps.map((st) => (
-                <div class="flex h-14 items-end p-1" style={`background: var(--${f}-${st}); color: ${st >= 500 ? 'white' : 'black'}`}>
+                <div class="flex h-14 items-end p-1" style={`background: var(--${f}-${st}); color: ${st >= 600 ? 'white' : 'black'}`}>
                   <span class="font-mono text-[10px]">{st}</span>
                 </div>
               ))}
@@ -141,6 +163,51 @@ const lead = 'text-muted-foreground mt-3 max-w-2xl text-lg font-medium';
           <div class="flex items-center gap-3">
             <span class="size-10 shrink-0 rounded-lg border" style={`background: var(${v})`}></span>
             <span class="font-mono text-xs">{name}</span>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Superfícies e texto cinza</h3>
+      <p class="text-muted-foreground mt-2 max-w-2xl text-base font-medium">
+        Paleta de cards do sistema com a escada de texto cinza. O cinza extra
+        (<code>--muted-foreground-subtle</code>) mantém AA só sobre card, background e popover;
+        em muted, secondary e accent use <code>--muted-foreground</code>.
+      </p>
+      <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" data-testid="surfaces">
+        {surfaces.map((sf) => (
+          <div data-surface={sf.name} class="flex min-w-0 flex-col gap-1 rounded-xl border p-4" style={`background: var(${sf.v})`}>
+            <p class="text-foreground font-medium">{sf.name}</p>
+            <p class="text-muted-foreground text-sm" data-text="secondary">Texto secundário sobre {sf.name}.</p>
+            {sf.extra ? (
+              <p class="text-muted-foreground-subtle text-sm" data-text="extra">Texto extra cinza: legenda ou nota.</p>
+            ) : (
+              <p class="text-muted-foreground text-sm" data-text="no-extra">Sem cinza extra nesta superfície.</p>
+            )}
+            <p class={cn('mt-1 font-mono text-xs', sf.extra ? 'text-muted-foreground-subtle' : 'text-muted-foreground')}>{sf.v}</p>
+          </div>
+        ))}
+      </div>
+      <div class="mt-4 grid gap-3 rounded-2xl border p-5 md:grid-cols-3" data-testid="text-ladder">
+        {textLadder.map(([n, v, use]) => (
+          <div class="flex min-w-0 flex-col gap-1">
+            <p class="text-lg font-medium" style={`color: var(${v})`}>Aa — {n}</p>
+            <p class="text-muted-foreground text-sm">{use}</p>
+          </div>
+        ))}
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Paleta de gráficos</h3>
+      <p class="text-muted-foreground mt-2 max-w-2xl text-base font-medium">
+        Derivada das 3 famílias e do neutro (ADR-04): nenhuma matiz nova. Séries também se
+        distinguem por traço e legenda, não só por cor.
+      </p>
+      <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5" data-testid="chart-palette">
+        {chartPalette.map(([n, from, use]) => (
+          <div class="flex min-w-0 flex-col gap-2 rounded-xl border p-3">
+            <span class="h-12 rounded-lg border" data-chart-swatch={n} style={`background: var(--${n})`}></span>
+            <span class="font-mono text-xs">--{n}</span>
+            <span class="text-muted-foreground text-xs">{from}</span>
+            <span class="text-muted-foreground-subtle text-xs">{use}</span>
           </div>
         ))}
       </div>
@@ -244,6 +311,15 @@ const lead = 'text-muted-foreground mt-3 max-w-2xl text-lg font-medium';
         <Callout client:visible variant="attention" subject="Atenção" message="pode ser fechado" description="dismissible: remove o callout do fluxo." dismissible />
         <Callout variant="research" subject="Pesquisa" message="Texto longo que quebra naturalmente em várias linhas sem reticências, mantendo o símbolo alinhado ao início do conteúdo quando passa de uma linha." />
         <Callout variant="evidence" subject="Evidência" message="Confirmada" />
+      </div>
+    </section>
+
+    <!-- Dados e charts -->
+    <section id="dados" class="mt-20" aria-labelledby="dados-title">
+      <h2 id="dados-title" class={h2}>Dados e charts</h2>
+      <p class={lead}>Indicadores, seis tipos de gráfico, tabela de dados e estados de carregamento, vazio e erro, todos nos tokens do sistema.</p>
+      <div class="mt-8 min-w-0">
+        <DataGallery client:visible />
       </div>
     </section>
 

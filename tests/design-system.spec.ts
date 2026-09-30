@@ -213,3 +213,115 @@ test("prefers-reduced-motion removes callout transitions", async ({ page }) => {
     .evaluate((el) => getComputedStyle(el).transitionDuration);
   expect(duration.split(",").every((d) => parseFloat(d) === 0)).toBe(true);
 });
+
+// ------------------------------------------------------------------ data & charts
+
+async function openData(page: Page) {
+  await page.goto(SHOWROOM);
+  await page.locator("#dados").scrollIntoViewIfNeeded();
+  await expect(page.locator("[data-testid=charts] .recharts-surface").first()).toBeVisible();
+  await page.waitForLoadState("networkidle");
+}
+
+for (const theme of ["light", "dark"] as const) {
+  test(`extra-gray text is AA on card/background/popover and used only there (${theme})`, async ({ page }) => {
+    await page.goto(SHOWROOM);
+    if (theme === "dark") await page.evaluate(() => document.documentElement.classList.add("dark"));
+    const rows = await page.locator("[data-testid=surfaces] [data-surface]").evaluateAll((els) =>
+      els.map((el) => {
+        const extra = el.querySelector("[data-text=extra]") as HTMLElement | null;
+        return {
+          surface: el.getAttribute("data-surface"),
+          bg: getComputedStyle(el).backgroundColor,
+          extra: extra ? getComputedStyle(extra).color : null,
+          secondary: getComputedStyle(el.querySelector("[data-text=secondary]")!).color,
+        };
+      }),
+    );
+    for (const r of rows) {
+      // the secondary gray must be AA everywhere
+      expect(await contrast(page, r.secondary, r.bg), `${r.surface} secondary`).toBeGreaterThanOrEqual(4.5);
+      if (r.extra) expect(await contrast(page, r.extra, r.bg), `${r.surface} extra`).toBeGreaterThanOrEqual(4.5);
+    }
+    expect(rows.filter((r) => r.extra).map((r) => r.surface)).toEqual(["background", "card", "popover"]);
+  });
+
+  test(`chart palette: 5 distinct colours, each ≥3:1 on card (${theme})`, async ({ page }) => {
+    await page.goto(SHOWROOM);
+    if (theme === "dark") await page.evaluate(() => document.documentElement.classList.add("dark"));
+    const { colors, card } = await page.evaluate(() => ({
+      colors: [...document.querySelectorAll("[data-chart-swatch]")].map((e) => getComputedStyle(e).backgroundColor),
+      card: getComputedStyle(document.querySelector("[data-surface=card]")!).backgroundColor,
+    }));
+    expect(colors).toHaveLength(5);
+    expect(new Set(colors).size).toBe(5);
+    for (const [i, c] of colors.entries()) {
+      expect(await contrast(page, c, card), `chart-${i + 1}`).toBeGreaterThanOrEqual(3);
+    }
+  });
+}
+
+test("data section: 6 charts + 4 sparklines render, table sorts and selects", async ({ page }) => {
+  await openData(page);
+  // 6 chart panels (the table tab is hidden until selected) + 4 KPI sparklines
+  await expect(page.locator("[data-testid=charts] .recharts-surface")).toHaveCount(6);
+  await expect(page.locator("[data-testid=kpi] .recharts-surface")).toHaveCount(4);
+  // every chart panel is labelled
+  const labels = await page.locator("[data-testid=charts] [role=group][aria-label]").count();
+  expect(labels).toBe(6);
+
+  // alternative representation: the table tab
+  await page.getByRole("tab", { name: "Tabela" }).click();
+  await expect(page.getByRole("cell", { name: "Jan" })).toBeVisible();
+
+  // sorting toggles aria-sort
+  const table = page.getByTestId("data-table");
+  const nome = table.getByRole("columnheader", { name: /Território/ });
+  await expect(nome).toHaveAttribute("aria-sort", "none");
+  await nome.getByRole("button").click();
+  await expect(nome).toHaveAttribute("aria-sort", "descending");
+  await nome.getByRole("button").click();
+  await expect(nome).toHaveAttribute("aria-sort", "ascending");
+  const first = await table.locator("tbody tr").first().locator("td").nth(1).textContent();
+  expect(first).toBe("Execução Assistida");
+
+  // selection is announced
+  await expect(table.getByText("1 de 4 selecionados")).toBeVisible();
+  await table.getByRole("checkbox", { name: "Selecionar todos" }).click();
+  await expect(table.getByText("4 de 4 selecionados")).toBeVisible();
+});
+
+test("data states: loading keeps a status role, error callout can retry", async ({ page }) => {
+  await openData(page);
+  const states = page.getByTestId("data-states");
+  await expect(states.getByRole("status")).toBeVisible();
+  await expect(states.getByText("Sem dados no período")).toBeVisible();
+  await states.getByRole("button", { name: "Tentar novamente" }).click();
+  await expect(states.getByText("Dados atualizados")).toBeVisible();
+});
+
+for (const width of [320, 375, 768, 1440]) {
+  test(`data section has no horizontal overflow @${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await openData(page);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+}
+
+test("axe: no serious or critical issues in tokens and data sections", async ({ page }) => {
+  await openData(page);
+  const { violations } = await new AxeBuilder({ page }).include("#tokens").include("#dados").analyze();
+  const blocking = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+  expect(blocking, JSON.stringify(blocking.map((v) => [v.id, v.nodes.map((n) => n.target)]))).toEqual([]);
+});
+
+for (const width of [375, 1440]) {
+  test(`visual: surfaces, chart palette and charts @${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await openData(page);
+    await expect(page.getByTestId("surfaces")).toHaveScreenshot(`surfaces-${width}.png`);
+    await expect(page.getByTestId("chart-palette")).toHaveScreenshot(`chart-palette-${width}.png`);
+    await expect(page.getByTestId("charts")).toHaveScreenshot(`charts-${width}.png`);
+  });
+}
