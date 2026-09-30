@@ -1,0 +1,24 @@
+---
+import { ItemDetail } from '@/features/store/components/item-detail';
+import { ITEM_TYPES, typeBySegment } from '@/features/store/data/item-types';
+import { getItem, listItems } from '@/features/store/data/repository';
+import DefaultLayout from '@/layouts/DefaultLayout.astro';
+
+export function getStaticPaths() {
+  return listItems().map((item) => ({
+    params: {
+      type: ITEM_TYPES.find((t) => t.type === item.type)!.segment,
+      slug: item.slug,
+    },
+  }));
+}
+
+const def = typeBySegment(Astro.params.type!)!;
+const item = getItem(def.type, Astro.params.slug!)!;
+---
+
+<DefaultLayout title={`${item.name} — Loja`} description={item.description}>
+  <section class="container max-w-5xl pt-32 pb-16 lg:pt-44 lg:pb-24">
+    <ItemDetail client:load item={item} />
+  </section>
+</DefaultLayout>

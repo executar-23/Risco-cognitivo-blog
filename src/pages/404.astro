@@ -11,7 +11,7 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro";
   <Background>
     <div class="container flex min-h-[70vh] flex-col items-center justify-center py-28 text-center lg:min-h-[80vh] lg:py-32">
       <div class="relative z-10 max-w-2xl">
-        <h1 class="from-foreground to-foreground/70 relative mb-6 bg-linear-to-br bg-clip-text py-2 text-5xl font-bold text-transparent sm:text-6xl lg:text-7xl">
+        <h1 class="from-foreground to-foreground/70 relative mb-6 bg-linear-to-br bg-clip-text py-2 text-5xl font-semibold tracking-tight text-transparent sm:text-6xl lg:text-7xl">
           Page Not Found
         </h1>
 
@@ -21,21 +21,15 @@ import DefaultLayout from "@/layouts/DefaultLayout.astro";
         </p>
 
         <div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <a href="/">
-          <Button size="lg" className="group min-w-[200px] gap-2">
-              <ArrowLeft className="size-5 transition-transform group-hover:-translate-x-1" />
+          <Button size="lg" className="group min-w-[200px]" asChild>
+            <a href="/">
+              <ArrowLeft className="transition-transform group-hover:-translate-x-1" />
               Back to Home
-            </Button>
-          </a>
-          <a href="/contact">
-            <Button
-            variant="outline"
-            size="lg"
-            className="min-w-[200px]"
-            >
-              Contact Support
-            </Button>
-           </a>
+            </a>
+          </Button>
+          <Button variant="outline" size="lg" className="min-w-[200px]" asChild>
+            <a href="/contact">Contact Support</a>
+          </Button>
         </div>
       </div>
     </div>

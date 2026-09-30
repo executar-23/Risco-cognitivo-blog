@@ -26,6 +26,7 @@ const pricingPlans = [
     name: "Free",
     button: {
       text: "Get started",
+      href: "/signup",
       variant: "outline" as const,
     },
   },
@@ -33,6 +34,7 @@ const pricingPlans = [
     name: "Startup",
     button: {
       text: "Get started",
+      href: "/signup",
       variant: "outline" as const,
     },
   },
@@ -40,6 +42,7 @@ const pricingPlans = [
     name: "Enterprise",
     button: {
       text: "Get a demo",
+      href: "/contact",
       variant: "outline" as const,
     },
   },
@@ -202,8 +205,11 @@ const PlanHeaders = ({
             <Button
               variant={pricingPlans[selectedPlan].button.variant}
               className="w-fit"
+              asChild
             >
-              {pricingPlans[selectedPlan].button.text}
+              <a href={pricingPlans[selectedPlan].button.href}>
+                {pricingPlans[selectedPlan].button.text}
+              </a>
             </Button>
           </div>
           <CollapsibleContent className="flex flex-col space-y-2 p-2">
@@ -234,8 +240,8 @@ const PlanHeaders = ({
         {pricingPlans.map((plan, index) => (
           <div key={index} className="">
             <h3 className="mb-3 text-2xl font-semibold">{plan.name}</h3>
-            <Button variant={plan.button.variant} className="">
-              {plan.button.text}
+            <Button variant={plan.button.variant} asChild>
+              <a href={plan.button.href}>{plan.button.text}</a>
             </Button>
           </div>
         ))}

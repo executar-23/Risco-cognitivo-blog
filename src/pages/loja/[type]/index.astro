@@ -1,0 +1,19 @@
+---
+import { StoreCatalog } from '@/features/store/components/store-catalog';
+import { ITEM_TYPES, typeBySegment } from '@/features/store/data/item-types';
+import { listItems } from '@/features/store/data/repository';
+import DefaultLayout from '@/layouts/DefaultLayout.astro';
+
+export function getStaticPaths() {
+  return ITEM_TYPES.map((t) => ({ params: { type: t.segment } }));
+}
+
+const def = typeBySegment(Astro.params.type!)!;
+const items = listItems();
+---
+
+<DefaultLayout title={`${def.plural} — Loja`} description={def.description}>
+  <section class="container max-w-5xl pt-32 pb-16 lg:pt-44 lg:pb-24">
+    <StoreCatalog client:load items={items} lockedType={def.type} />
+  </section>
+</DefaultLayout>

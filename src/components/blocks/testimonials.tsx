@@ -92,8 +92,10 @@ export const Testimonials = ({
               successful: staying focused, moving quickly, and always aiming for
               high-quality work.
             </p>
-            <Button variant="outline" className="shadow-md">
-              Read our Customer Stories <ArrowRight className="size-4" />
+            <Button variant="outline" asChild>
+              <a href="/blog">
+                Read our Customer Stories <ArrowRight />
+              </a>
             </Button>
           </div>
 

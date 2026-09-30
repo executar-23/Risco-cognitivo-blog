@@ -122,8 +122,9 @@ export const Pricing = ({ className }: { className?: string }) => {
                 <Button
                   className="w-fit"
                   variant={plan.name === "Startup" ? "default" : "outline"}
+                  asChild
                 >
-                  Get started
+                  <a href="/signup">Get started</a>
                 </Button>
               </CardContent>
             </Card>
