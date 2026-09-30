@@ -11,6 +11,8 @@
     // src/pages/404.astro builds to dist/404.html
     "not_found_handling": "404-page"
   },
+  // Required by `wrangler preview` (branch preview builds); empty = inherit top-level settings
+  "previews": {},
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
