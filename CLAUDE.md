@@ -121,3 +121,25 @@ Guidance for Claude Code (and other AI agents) working in this repository.
     Markdown em `.prose`) segue o padrão STORE-WIREFRAMES: células cinza separadas
     (`--table-*`), cabeçalho em caixa alta, valores técnicos em mono, sem bordas locais.
 
+### ADR-06: Hub de rotas e links — toda nova rota ou link entra no hub
+
+- **Status:** Aceita — implementada
+- **Contexto:** Rotas e links (previews, deploys, compartilhamentos) se espalhavam sem
+  catálogo, e um catálogo de QR gerado à parte apontava para o preview de outra branch.
+  Fluxo detalhado em `docs/design-system/ROUTES-HUB-WORKFLOW-001.md`.
+- **Decisão:**
+  - O hub é `/admin/rotas/` (linkado no painel `/admin`), gerado a partir de
+    `src/data/routes.ts`, a fonte única. Os artigos de `src/content/blog` entram sozinhos.
+  - Todo PR que cria página em `src/pages`, ferramenta em `public/*/index.html` ou um
+    link gerado/compartilhado (preview, deploy, QR) registra a entrada no mesmo PR.
+  - `npm run routes:check` (`tests/routes.spec.ts`) falha se uma rota existir sem registro,
+    se um registro não tiver rota ou se uma entrada estiver malformada; o checklist do PR
+    (`.github/pull_request_template.md`) repete a regra.
+  - Os QRs apontam para `PUBLIC_ROUTES_BASE_URL` (padrão: o host de produção), nunca para
+    preview de branch, e o teste decodifica cada QR e compara com a URL exibida.
+  - Rotas em `/admin/*` seguem sem guarda de autenticação e ficam marcadas "Interno exposto".
+- **Consequências:**
+  - Rota nova sem registro não passa nos testes; rota removida exige remover a entrada.
+  - `tools/qr-python/` é arquivo de referência (gerador DESK-OS Sprint, incompleto) e fica
+    fora do build; não gera este catálogo.
+

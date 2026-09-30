@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
+import { expectTheme, useTheme } from "./theme";
 import { isValidPlainText, normalizeText } from "../src/lib/plain/normalizeText";
 import { parseFence } from "../src/lib/plain/remarkPlain";
 import { renderTree } from "../src/lib/plain/renderTree";
@@ -207,8 +208,9 @@ test("AC-10: axe finds no serious or critical issues", async ({ page }) => {
 
 for (const theme of ["light", "dark"] as const) {
   test(`plain text contrast is AAA (${theme})`, async ({ page }) => {
+    await useTheme(page, theme);
     await page.goto(SHOWROOM);
-    if (theme === "dark") await page.evaluate(() => document.documentElement.classList.add("dark"));
+    await expectTheme(page, theme);
     const ratio = await page.locator("#FLOW-OPS-001").evaluate((el) => {
       const ctx = document.createElement("canvas").getContext("2d")!;
       const lum = (c: string) => {

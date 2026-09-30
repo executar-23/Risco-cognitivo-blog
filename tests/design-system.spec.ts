@@ -1,6 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
+import { expectTheme, useTheme } from "./theme";
+
 const SHOWROOM = "/admin/design-system/";
 const ARTICLE = "/blog/do-risco-cognitivo-a-execucao-assistida/";
 const WIDTHS = [320, 375, 768, 1024, 1440];
@@ -102,8 +104,9 @@ test("26 variants, one symbol each, 3 families only", async ({ page }) => {
 
 for (const theme of ["light", "dark"] as const) {
   test(`AA contrast for every variant and layout (${theme})`, async ({ page }) => {
+    await useTheme(page, theme);
     await page.goto(SHOWROOM);
-    if (theme === "dark") await page.evaluate(() => document.documentElement.classList.add("dark"));
+    await expectTheme(page, theme);
     const pairs = await page.locator("[data-callout]").evaluateAll((els) =>
       els.map((el) => {
         const c = (q: string, prop: "color" | "backgroundColor") => {
@@ -225,8 +228,9 @@ async function openData(page: Page) {
 
 for (const theme of ["light", "dark"] as const) {
   test(`extra-gray text is AA on card/background/popover and used only there (${theme})`, async ({ page }) => {
+    await useTheme(page, theme);
     await page.goto(SHOWROOM);
-    if (theme === "dark") await page.evaluate(() => document.documentElement.classList.add("dark"));
+    await expectTheme(page, theme);
     const rows = await page.locator("[data-testid=surfaces] [data-surface]").evaluateAll((els) =>
       els.map((el) => {
         const extra = el.querySelector("[data-text=extra]") as HTMLElement | null;
@@ -247,8 +251,9 @@ for (const theme of ["light", "dark"] as const) {
   });
 
   test(`chart palette: 5 distinct colours, each ≥3:1 on card (${theme})`, async ({ page }) => {
+    await useTheme(page, theme);
     await page.goto(SHOWROOM);
-    if (theme === "dark") await page.evaluate(() => document.documentElement.classList.add("dark"));
+    await expectTheme(page, theme);
     const { colors, card } = await page.evaluate(() => ({
       colors: [...document.querySelectorAll("[data-chart-swatch]")].map((e) => getComputedStyle(e).backgroundColor),
       card: getComputedStyle(document.querySelector("[data-surface=card]")!).backgroundColor,

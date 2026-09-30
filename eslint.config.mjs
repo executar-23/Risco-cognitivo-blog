@@ -10,6 +10,7 @@ export default [
     ignores: [
       "node_modules/**/*",
       "dist/**/*",
+      "tools/**/*",
       "**/src/components/ui/**",
       "**/components/ui/**",
     ],
