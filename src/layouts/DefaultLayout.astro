@@ -15,5 +15,9 @@ const { title, description } = Astro.props;
         <Navbar client:only='react' />
         <main><slot /></main>
         <Footer />
+        <script>
+            // Copy buttons of PlainTextPanel / AsciiDiagram (ADR-05)
+            import '@/lib/plain/copy';
+        </script>
     </body>
 </html>

@@ -3,6 +3,7 @@ import { type CollectionEntry, getCollection } from 'astro:content';
 import { render } from 'astro:content';
 
 import { BlogPost } from '@/components/blocks/blog-post';
+import { AsciiDiagram, PlainTextPanel } from '@/components/plain';
 import DefaultLayout from '@/layouts/DefaultLayout.astro';
 
 export async function getStaticPaths() {
@@ -22,7 +23,7 @@ const { Content } = await render(post);
 <DefaultLayout>
 	<div class="py-28 lg:pt-44 lg:pb-32">
 		<BlogPost post={post} client:only='react' >
-			<Content />
+			<Content components={{ AsciiDiagram, PlainTextPanel }} />
 		</BlogPost>
 	</div>
 </DefaultLayout>

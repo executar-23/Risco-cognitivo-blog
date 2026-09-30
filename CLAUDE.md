@@ -90,3 +90,31 @@ Guidance for Claude Code (and other AI agents) working in this repository.
   - Gráficos novos usam `ChartContainer` com `var(--chart-N)`; não definir cor localmente.
   - Alterar a paleta de gráficos mexe só nos tokens, não nas páginas.
 
+### ADR-05: Diagramas e textos operacionais em plain text (ADR-BLOG-ASCII-001 + anexo A)
+
+- **Status:** Aceita — implementada; tokens escuros provisórios
+- **Contexto:** Fluxogramas, organogramas, árvores, mapas mentais, planos e textos
+  operacionais precisam ser copiáveis, pesquisáveis e acessíveis. Especificação em
+  `docs/design-system/ADR-BLOG-ASCII-001.md`, `ANX-ADR-BLOG-ASCII-001-A.md` e
+  `REPORT-GENERATOR-CONTRACT-001.md`.
+- **Decisão:**
+  - Diagramas são texto UTF-8 com caracteres de desenho de caixa, renderizados por
+    `<AsciiDiagram>`; textos operacionais por `<PlainTextPanel>`. Nunca Mermaid, SVG,
+    Canvas ou imagem para esse conteúdo.
+  - Os dois usam a mesma base `PlainSurface` (`src/components/plain/`) e só os tokens
+    `--plain-*` de `src/styles/global.css`. `--plain-accent` é `var(--primary)`: nada de
+    matiz nova (ADR-03).
+  - `AsciiDiagram` preserva geometria (`white-space: pre`, rolagem horizontal);
+    `PlainTextPanel` quebra texto longo (`pre-wrap`). Conteúdo nunca é reescrito, só
+    normalizado (BOM, fim de linha, linhas em branco nas pontas).
+  - Em MDX, o conteúdo vai como `` {`…`} `` filho único ou em blocos ` ```ascii ` /
+    ` ```plain `; o plugin `src/lib/plain/remarkPlain.ts` passa o texto verbatim como
+    `source`. Em TSX/Astro, use `source` (ou `renderTree(json)` para árvores).
+  - Copiar funciona sem hidratação (script delegado `src/lib/plain/copy.ts` no
+    `DefaultLayout`); sem JavaScript o bloco segue legível.
+  - Relatórios seguem o `REPORT-GENERATOR-CONTRACT-001`: Markdown para a narrativa,
+    blocos plain text só onde o conteúdo é operacional ou estrutural, sempre com `kind`.
+- **Consequências:**
+  - O showroom oficial é `/admin/design-system#plain`; exemplo em `/admin/relatorio-exemplo/`.
+  - Relatórios (`ReportLayout`) não usam capitular.
+
