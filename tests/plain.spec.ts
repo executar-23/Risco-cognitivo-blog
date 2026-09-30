@@ -237,3 +237,24 @@ for (const width of [375, 1440]) {
     await expect(page.getByTestId("plain-panels")).toHaveScreenshot(`plain-panels-${width}.png`);
   });
 }
+
+test("tables follow the STORE-WIREFRAMES style everywhere", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  for (const [url, sel] of [
+    [SHOWROOM, "[data-testid=table-reference] table"],
+    [SHOWROOM, "[data-testid=data-table] table"],
+    ["/blog/do-risco-cognitivo-a-execucao-assistida/", ".prose table"],
+  ] as const) {
+    await page.goto(url);
+    const t = page.locator(sel).first();
+    await t.scrollIntoViewIfNeeded();
+    const s = await t.evaluate((el) => {
+      const th = getComputedStyle(el.querySelector("th")!);
+      const td = getComputedStyle(el.querySelector("td")!);
+      const cs = getComputedStyle(el);
+      return { collapse: cs.borderCollapse, spacing: cs.borderSpacing.split(" ")[0], th: th.backgroundColor, upper: th.textTransform, td: td.backgroundColor };
+    });
+    expect(s, `${url} ${sel}`).toEqual({ collapse: "separate", spacing: "3px", th: "rgb(235, 235, 235)", upper: "uppercase", td: "rgb(248, 248, 248)" });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
+  }
+});

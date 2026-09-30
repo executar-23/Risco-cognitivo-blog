@@ -152,3 +152,11 @@ src/lib/plain/
 
 A estrutura segue o anexo A (`components/plain/` em vez de `components/ascii/`), que substitui a
 proposta inicial do §14 para evitar duplicação entre os dois componentes.
+
+## 15. Tabelas (referência STORE-WIREFRAMES)
+
+Todas as tabelas usam a mesma linguagem: `border-collapse: separate` com espaçamento de 3px,
+cabeçalho `--table-head-surface` (#EBEBEB) em caixa alta e peso 500, células `--table-surface`
+(#F8F8F8), texto preto, `code` em `--plain-font`, links no primário. Aplicado pela classe
+`.ds-table` (componente `Table`) e por `.prose table` (Markdown). Showroom:
+`/admin/design-system#plain` → "Tabelas".

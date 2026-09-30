@@ -195,6 +195,17 @@
   --plain-header-padding-mobile: 18px 20px 6px;
   --plain-body-padding-mobile: 18px 20px 24px;
   --plain-muted: var(--muted-foreground);
+  /* Tables (ADR-05 §15, STORE-WIREFRAMES reference): separated gray cells. */
+  --table-surface: var(--plain-surface);
+  --table-head-surface: var(--plain-border);
+  --table-gap: 3px;
+  --table-text: var(--plain-text);
+  --table-link: var(--primary);
+  --table-cell-padding: 12px 16px;
+  --table-radius: 2px;
+  --table-font-size: 1rem;
+  --table-head-weight: 500;
+  --table-selected: var(--brand-50);
 
   /* Layer 3 — callout component tokens (handoff §5) */
   --callout-accent-blue: var(--color-brand-default);
@@ -298,6 +309,7 @@
   --plain-surface: var(--card);
   --plain-border: var(--border);
   --plain-text: var(--foreground);
+  --table-head-surface: var(--muted);
 
   /* PROVISIONAL — no dark spec in DS-CALLOUT-001; same families, roles inverted
      for a dark canvas. Replace when a dark theme spec exists. */
@@ -582,4 +594,65 @@ body {
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* Canonical table (ADR-05 §15): every Table component and every .prose table. */
+.ds-table,
+.prose table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: var(--table-gap);
+  margin-inline: calc(var(--table-gap) * -1);
+  font-size: var(--table-font-size);
+  color: var(--table-text);
+}
+.ds-table :is(th, td),
+.prose table :is(th, td) {
+  padding: var(--table-cell-padding);
+  border: 0;
+  border-radius: var(--table-radius);
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.35;
+  color: var(--table-text);
+}
+.ds-table th,
+.prose table th {
+  background: var(--table-head-surface);
+  font-family: var(--text-family);
+  font-weight: var(--table-head-weight);
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.ds-table td,
+.prose table td {
+  background: var(--table-surface);
+}
+.ds-table tr[data-state="selected"] td {
+  background: var(--table-selected);
+}
+.ds-table :is(th, td) code,
+.prose table :is(th, td) code {
+  font-family: var(--plain-font);
+  font-size: 0.95em;
+  font-weight: 400;
+  background: none;
+  padding: 0;
+}
+.prose table :is(th, td) code::before,
+.prose table :is(th, td) code::after {
+  content: none;
+}
+.ds-table a,
+.prose table a {
+  color: var(--table-link);
+  text-decoration: none;
+}
+.ds-table a:hover,
+.prose table a:hover {
+  text-decoration: underline;
+}
+.prose thead,
+.prose tbody tr {
+  border: 0;
 }

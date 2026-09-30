@@ -117,4 +117,7 @@ Guidance for Claude Code (and other AI agents) working in this repository.
 - **Consequências:**
   - O showroom oficial é `/admin/design-system#plain`; exemplo em `/admin/relatorio-exemplo/`.
   - Relatórios (`ReportLayout`) não usam capitular.
+  - Toda tabela (`Table` de `src/components/ui/table.tsx`, classe `.ds-table` ou tabela
+    Markdown em `.prose`) segue o padrão STORE-WIREFRAMES: células cinza separadas
+    (`--table-*`), cabeçalho em caixa alta, valores técnicos em mono, sem bordas locais.
 
