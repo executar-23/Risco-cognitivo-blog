@@ -180,7 +180,7 @@ const lead = 'text-muted-foreground mt-3 max-w-2xl text-lg font-medium';
     <!-- Callouts -->
     <section id="callouts" class="mt-20" aria-labelledby="callouts-title">
       <h2 id="callouts-title" class={h2}>Callouts</h2>
-      <p class={lead}>Um único primitive, 26 variantes, 3 famílias cromáticas, 3 tamanhos e 2 tons.</p>
+      <p class={lead}>Um único primitive, 26 variantes, 3 famílias cromáticas, 3 tamanhos, 2 tons e 2 layouts (compacto e anatomia completa).</p>
 
       <h3 class="mt-10 text-xl font-medium">Referência — approved · md</h3>
       <p class="text-muted-foreground mt-2 text-base font-medium">
@@ -195,10 +195,27 @@ const lead = 'text-muted-foreground mt-3 max-w-2xl text-lg font-medium';
         <a href="#callouts" class={buttonVariants({ size: 'lg' })} data-testid="cta-reference">CTA · Button lg</a>
       </div>
 
-      <h3 class="mt-10 text-xl font-medium">26 variantes · md · outline</h3>
+      <h3 class="mt-10 text-xl font-medium">Anatomia completa · outline × tinted</h3>
+      <p class="text-muted-foreground mt-2 text-base font-medium">
+        Com descrição ou ações, o callout ganha faixa superior (rótulo + fechar), corpo (emblema
+        no outline, título em <code>--font-mono</code> e descrição) e rodapé com ações à direita.
+        Sem descrição, fica na barra compacta acima.
+      </p>
+      <div class="mt-4 grid gap-6 md:grid-cols-2" data-testid="callout-anatomy">
+        <Callout client:visible variant="tip" subject="Dica do dia" message="Um procedimento por vez" description="Registre critérios de conclusão antes de automatizar: o agente só apoia o que está explícito." action={{ label: 'Ação principal', href: '#callouts' }} secondaryAction={{ label: 'Secundária', href: '#callouts' }} dismissible />
+        <Callout client:visible variant="tip" tone="tinted" subject="Dica do dia" message="Um procedimento por vez" description="Registre critérios de conclusão antes de automatizar: o agente só apoia o que está explícito." action={{ label: 'Entendi', href: '#callouts' }} dismissible />
+        <Callout client:visible variant="warning" subject="Aviso" message="Revise antes de publicar" description="Há fontes sem data de acesso. Confira a seção de referências antes de enviar para revisão." action={{ label: 'Revisar', href: '#callouts' }} secondaryAction={{ label: 'Depois', href: '#callouts' }} dismissible />
+        <Callout client:visible variant="warning" tone="tinted" subject="Aviso" message="Revise antes de publicar" description="Há fontes sem data de acesso. Confira a seção de referências antes de enviar para revisão." action={{ label: 'Revisar', href: '#callouts' }} secondaryAction={{ label: 'Depois', href: '#callouts' }} dismissible />
+        <Callout client:visible variant="error" subject="Erro" message="Há dados não salvos" description="Sair agora descarta as alterações feitas neste rascunho." action={{ label: 'Descartar', href: '#callouts' }} secondaryAction={{ label: 'Salvar', href: '#callouts' }} dismissible />
+        <Callout client:visible variant="error" tone="tinted" subject="Erro" message="Há dados não salvos" description="Sair agora descarta as alterações feitas neste rascunho." action={{ label: 'Descartar', href: '#callouts' }} secondaryAction={{ label: 'Salvar', href: '#callouts' }} dismissible />
+        <Callout client:visible variant="action" subject="Ação necessária" message="Agende a revisão" description="Marque 30 minutos com quem executa o processo para validar o redesenho." action={{ label: 'Agendar', href: '#callouts' }} secondaryAction={{ label: 'Pular', href: '#callouts' }} dismissible />
+        <Callout client:visible variant="action" tone="tinted" subject="Ação necessária" message="Agende a revisão" description="Marque 30 minutos com quem executa o processo para validar o redesenho." action={{ label: 'Agendar', href: '#callouts' }} secondaryAction={{ label: 'Pular', href: '#callouts' }} dismissible />
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">26 variantes · md · compacto</h3>
       <div class="mt-4 grid gap-3 md:grid-cols-2" data-testid="callout-variants">
         {CALLOUT_VARIANT_NAMES.map((v) => (
-          <Callout variant={v} subject={v} message={CALLOUT_VARIANTS[v].label} description={`Família ${CALLOUT_VARIANTS[v].family}.`} />
+          <Callout variant={v} subject={CALLOUT_VARIANTS[v].label} message={`${v} · ${CALLOUT_VARIANTS[v].family}`} />
         ))}
       </div>
 

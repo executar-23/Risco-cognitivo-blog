@@ -56,6 +56,22 @@ Padrão da imagem: `[CircleCheck] [Plano: 700] [Aprovado: 400]`. Implementação
 <Callout variant="approved" subject="Plano" message="Aprovado" />
 ```
 
+## 2b. Anatomia completa (v1.2 — referência Material X)
+
+Dois layouts escolhidos automaticamente pelo conteúdo:
+
+- **Compacto** — só headline (sem descrição nem ações): barra única com glifo, assunto (texto, 700) e mensagem (`--font-mono`, 400); altura = CTA (40px no md).
+- **Completo** — com descrição, ações ou loading:
+
+```
+Callout (card: radius-xl, shadow-md no outline; superfície subtle no tinted)
+├── Header   faixa family.subtle · rótulo (subject ?? label) em family.default · ✕ à direita
+├── Body     [emblema circular neutro com glifo — só outline, não no sm] + título (mono, family.default) + descrição
+└── Footer?  divisor 1px · ações à direita: secundária (outline) + primária (preenchida family.default / on-default)
+```
+
+No tinted o header usa `color-mix(subtle, soft 25%)` e o divisor `soft`. Abaixo de 480px o emblema reduz de 56 para 44px.
+
 ## 3. Taxonomia — 26 variantes + símbolos (Lucide)
 
 | variant | Símbolo | Label padrão | Tom | Uso |
@@ -194,6 +210,7 @@ Ver `src/components/ui/callout.tsx` (`CalloutProps`) e `callout-registry.ts` (`C
 - [x] prefers-reduced-motion
 - [x] loading, disabled, dismissible e empty implementados
 - [x] página de showroom com as 26 variantes
+- [x] anatomia completa (header/body/footer) × outline/tinted × 3 famílias, com contraste AA em claro e escuro
 - [x] testes visuais contra regressão (`npm run test:visual`)
 
 Dark mode: fora do contrato original; implementado com tokens **provisórios** (ADR-03).

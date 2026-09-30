@@ -45,6 +45,7 @@ Primitivos: `brand.50…950`, `attention.50…950`, `critical.50…950` (neutros
 | default | ícone, marcador, link | 600 (= hex do handoff) |
 | strong | header / fundo enfatizado | 900 |
 | on-strong | conteúdo sobre strong | branco |
+| on-default | conteúdo sobre default (ação primária) | branco (claro) / 950 (escuro) |
 
 ## 6. Tokens exclusivos do Callout
 
@@ -53,7 +54,9 @@ Primitivos: `brand.50…950`, `attention.50…950`, `critical.50…950` (neutros
 ## 7. Composições
 
 - **outline** (padrão): surface neutra, acento da família, borda neutra.
-- **tinted**: header = strong/on-strong; corpo = subtle; borda = soft; ícone = default; heading/body = neutros.
+- **tinted**: header = mix(subtle, soft 25%) com texto default; corpo = subtle; borda/divisor = soft; título = default; descrição = neutra.
+- **outline (anatomia completa)**: header = subtle com texto default; corpo = card; emblema neutro com glifo default.
+- **ação primária**: superfície default, texto on-default (branco no claro; 950 da família no escuro).
 
 ## 8. Matriz de variantes
 

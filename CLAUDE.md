@@ -37,6 +37,9 @@ Guidance for Claude Code (and other AI agents) working in this repository.
   - A geometria deriva dos tokens do Button, `--radius` e `--spacing` (md = altura do CTA,
     40px); não há escala própria. Glifo sem contêiner; assunto na fonte do texto (700) e
     mensagem em `--font-mono` (400). As medidas do handoff são de um raster 3×.
+  - Layout pelo conteúdo: só headline → barra compacta; com descrição/ações → anatomia
+    completa (referência Material X): header tonal com rótulo e ✕, corpo com emblema
+    (outline) e título mono, rodapé com ações à direita (primária na cor da família).
 - **Consequências:**
   - Páginas e artigos não definem hex, raio ou ícone de callout localmente.
   - O showroom oficial é `/admin/design-system#callouts`.

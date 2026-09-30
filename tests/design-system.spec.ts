@@ -101,36 +101,80 @@ test("26 variants, one symbol each, 3 families only", async ({ page }) => {
 });
 
 for (const theme of ["light", "dark"] as const) {
-  test(`AA contrast for every variant (${theme})`, async ({ page }) => {
+  test(`AA contrast for every variant and layout (${theme})`, async ({ page }) => {
     await page.goto(SHOWROOM);
     if (theme === "dark") await page.evaluate(() => document.documentElement.classList.add("dark"));
-    const pairs = await page
-      .locator("[data-callout]")
-      .evaluateAll((els) =>
-        els.map((el) => {
-          const cs = getComputedStyle(el);
-          const icon = el.querySelector("[aria-hidden=true]") as HTMLElement;
-          const tinted = el.getAttribute("data-tone") === "tinted";
-          const header = el.firstElementChild as HTMLElement;
-          return {
-            text: cs.color,
-            surface: cs.backgroundColor,
-            icon: getComputedStyle(icon).color,
-            headerText: tinted ? getComputedStyle(header).color : null,
-            headerBg: tinted ? getComputedStyle(header).backgroundColor : null,
-          };
-        }),
-      );
+    const pairs = await page.locator("[data-callout]").evaluateAll((els) =>
+      els.map((el) => {
+        const c = (q: string, prop: "color" | "backgroundColor") => {
+          const n = el.querySelector(q) as HTMLElement | null;
+          return n ? getComputedStyle(n)[prop] : null;
+        };
+        const root = getComputedStyle(el);
+        const header = el.querySelector("[data-callout-header]") as HTMLElement | null;
+        const primary = el.querySelector("[data-callout-footer] > :last-child") as HTMLElement | null;
+        return {
+          id: `${el.getAttribute("data-variant")}/${el.getAttribute("data-tone")}/${el.getAttribute("data-layout")}`,
+          text: root.color,
+          surface: root.backgroundColor,
+          icon: c("svg", "color"),
+          iconBg: c("[data-callout-emblem]", "backgroundColor") ?? root.backgroundColor,
+          headerText: header ? getComputedStyle(header.querySelector("p")!).color : null,
+          headerBg: header ? getComputedStyle(header).backgroundColor : null,
+          title: c("[data-callout-body] p", "color"),
+          actionText: primary && !primary.hasAttribute("disabled") ? getComputedStyle(primary).color : null,
+          actionBg: primary && !primary.hasAttribute("disabled") ? getComputedStyle(primary).backgroundColor : null,
+        };
+      }),
+    );
     for (const p of pairs) {
-      expect(await contrast(page, p.text, p.surface)).toBeGreaterThanOrEqual(4.5);
-      // tinted: the icon sits on the header strip, not on the body surface
-      expect(await contrast(page, p.icon, p.headerBg ?? p.surface)).toBeGreaterThanOrEqual(3);
-      if (p.headerText && p.headerBg) {
-        expect(await contrast(page, p.headerText, p.headerBg)).toBeGreaterThanOrEqual(4.5);
-      }
+      expect(await contrast(page, p.text, p.surface), p.id).toBeGreaterThanOrEqual(4.5);
+      if (p.icon) expect(await contrast(page, p.icon, p.iconBg), `${p.id} icon`).toBeGreaterThanOrEqual(3);
+      if (p.headerText && p.headerBg)
+        expect(await contrast(page, p.headerText, p.headerBg), `${p.id} header`).toBeGreaterThanOrEqual(4.5);
+      if (p.title) expect(await contrast(page, p.title, p.surface), `${p.id} title`).toBeGreaterThanOrEqual(4.5);
+      if (p.actionText && p.actionBg)
+        expect(await contrast(page, p.actionText, p.actionBg), `${p.id} action`).toBeGreaterThanOrEqual(4.5);
     }
   });
 }
+
+test("full anatomy: header, emblem only in outline, footer actions on the right", async ({ page }) => {
+  await page.goto(SHOWROOM);
+  const cards = page.locator("[data-testid=callout-anatomy] [data-callout]");
+  await expect(cards).toHaveCount(8);
+  const m = await cards.evaluateAll((els) =>
+    els.map((el) => {
+      const r = el.getBoundingClientRect();
+      const header = el.querySelector("[data-callout-header]")!;
+      const last = el.querySelector("[data-callout-footer] > :last-child")!.getBoundingClientRect();
+      return {
+        tone: el.getAttribute("data-tone"),
+        layout: el.getAttribute("data-layout"),
+        label: header.textContent?.trim(),
+        closeInHeader: !!header.querySelector('button[aria-label="Fechar aviso"]'),
+        emblems: el.querySelectorAll("[data-callout-emblem]").length,
+        rightGap: Math.round(r.right - last.right),
+        titleMono: /mono/i.test(getComputedStyle(el.querySelector("[data-callout-body] p")!).fontFamily),
+      };
+    }),
+  );
+  for (const c of m) {
+    expect(c.layout).toBe("full");
+    expect(c.label).toBeTruthy();
+    expect(c.closeInHeader).toBe(true);
+    expect(c.emblems).toBe(c.tone === "outline" ? 1 : 0);
+    expect(c.rightGap).toBeLessThanOrEqual(17);
+    expect(c.titleMono).toBe(true);
+  }
+  // short callouts stay compact
+  await page.goto(ARTICLE);
+  const layouts = await page.locator("[data-callout]").evaluateAll((els) =>
+    els.map((e) => `${e.getAttribute("data-variant")}:${e.getAttribute("data-layout")}`),
+  );
+  expect(layouts.filter((l) => l.startsWith("question") || l.startsWith("quote")).every((l) => l.endsWith("compact"))).toBe(true);
+  expect(layouts.filter((l) => /^(decision|example|note):/.test(l)).every((l) => l.endsWith("full"))).toBe(true);
+});
 
 test("axe: no serious or critical issues in callouts and article", async ({ page }) => {
   for (const [url, include] of [
@@ -147,7 +191,10 @@ test("axe: no serious or critical issues in callouts and article", async ({ page
 
 test("keyboard: dismiss is reachable and closes the callout", async ({ page }) => {
   await page.goto(SHOWROOM);
-  const close = page.getByRole("button", { name: "Fechar aviso" });
+  const close = page
+    .locator("[data-callout]")
+    .filter({ hasText: "pode ser fechado" })
+    .getByRole("button", { name: "Fechar aviso" });
   await close.scrollIntoViewIfNeeded();
   await expect(close).toBeVisible();
   await page.waitForLoadState("networkidle");
@@ -162,6 +209,7 @@ test("prefers-reduced-motion removes callout transitions", async ({ page }) => {
   await page.goto(SHOWROOM);
   const duration = await page
     .getByRole("button", { name: "Fechar aviso" })
+    .first()
     .evaluate((el) => getComputedStyle(el).transitionDuration);
   expect(duration.split(",").every((d) => parseFloat(d) === 0)).toBe(true);
 });

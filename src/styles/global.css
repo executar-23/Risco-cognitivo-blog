@@ -145,22 +145,25 @@
   --critical-900: oklch(0.316 0.101 27.67);
   --critical-950: oklch(0.266 0.084 27.67);
 
-  /* Layer 2 — semantic roles per family (subtle/soft/default/strong/on-strong) */
+  /* Layer 2 — semantic roles per family (subtle/soft/default/strong/on-strong/on-default) */
   --color-brand-subtle: var(--brand-100);
   --color-brand-soft: var(--brand-300);
   --color-brand-default: var(--brand-600);
   --color-brand-strong: var(--brand-900);
   --color-brand-on-strong: oklch(1 0 0);
+  --color-brand-on-default: oklch(1 0 0);
   --color-attention-subtle: var(--attention-100);
   --color-attention-soft: var(--attention-300);
   --color-attention-default: var(--attention-600);
   --color-attention-strong: var(--attention-900);
   --color-attention-on-strong: oklch(1 0 0);
+  --color-attention-on-default: oklch(1 0 0);
   --color-critical-subtle: var(--critical-100);
   --color-critical-soft: var(--critical-300);
   --color-critical-default: var(--critical-600);
   --color-critical-strong: var(--critical-900);
   --color-critical-on-strong: oklch(1 0 0);
+  --color-critical-on-default: oklch(1 0 0);
 
   /* Layer 3 — callout component tokens (handoff §5) */
   --callout-accent-blue: var(--color-brand-default);
@@ -189,6 +192,24 @@
   --callout-glyph-sm: calc(var(--spacing) * 4); /* = Button svg size-4 */
   --callout-glyph-md: calc(var(--spacing) * 4.5);
   --callout-glyph-lg: calc(var(--spacing) * 5);
+  /* Full anatomy (header / body / footer) — DS-CALLOUT-001 v1.2, Material X reference */
+  --callout-card-radius: calc(var(--radius) * 2 - 4px); /* radius-xl */
+  --callout-card-shadow: var(--shadow-md);
+  --callout-header-height: calc(var(--spacing) * 11);
+  --callout-header-padding-x: calc(var(--spacing) * 4);
+  --callout-body-padding: calc(var(--spacing) * 5);
+  --callout-body-padding-wide: calc(var(--spacing) * 6);
+  --callout-body-gap: calc(var(--spacing) * 5);
+  --callout-emblem-size: calc(var(--spacing) * 14);
+  --callout-emblem-size-narrow: calc(var(--spacing) * 11);
+  --callout-emblem-glyph: calc(var(--spacing) * 7);
+  --callout-emblem-glyph-narrow: calc(var(--spacing) * 5.5);
+  --callout-emblem-border: 1.5px;
+  --callout-footer-padding-y: calc(var(--spacing) * 3);
+  --callout-footer-padding-x: calc(var(--spacing) * 4);
+  --callout-footer-gap: calc(var(--spacing) * 3);
+  --callout-header-family: var(--display-family);
+  --callout-header-weight: 500;
   --callout-font-family: var(--text-family);
   --callout-label-family: var(--text-family);
   --callout-message-family: var(--font-mono);
@@ -247,14 +268,17 @@
   --color-brand-soft: var(--brand-800);
   --color-brand-default: var(--brand-300);
   --color-brand-strong: var(--brand-700);
+  --color-brand-on-default: var(--brand-950);
   --color-attention-subtle: var(--attention-950);
   --color-attention-soft: var(--attention-800);
   --color-attention-default: var(--attention-300);
   --color-attention-strong: var(--attention-700);
+  --color-attention-on-default: var(--attention-950);
   --color-critical-subtle: var(--critical-950);
   --color-critical-soft: var(--critical-800);
   --color-critical-default: var(--critical-300);
   --color-critical-strong: var(--critical-700);
+  --color-critical-on-default: var(--critical-950);
 }
 
 @theme inline {
@@ -449,39 +473,57 @@ body {
 [data-callout] {
   --callout-surface: var(--card);
   --callout-border: var(--border);
+  --callout-divider: var(--border);
   --callout-heading: var(--callout-text-strong);
   --callout-body: var(--callout-text-default);
-  --callout-icon-surface: var(--card);
+  --callout-emblem-surface: var(--card);
+  --callout-emblem-ring: var(--border);
+  --callout-shadow: var(--callout-card-shadow);
 }
 [data-callout][data-family="brand"] {
   --callout-icon: var(--color-brand-default);
   --callout-link: var(--color-brand-default);
+  --callout-title: var(--color-brand-default);
   --callout-surface-emphasis: var(--color-brand-subtle);
   --callout-border-emphasis: var(--color-brand-soft);
-  --callout-header-surface: var(--color-brand-strong);
-  --callout-header-text: var(--color-brand-on-strong);
+  --callout-header-surface: var(--color-brand-subtle);
+  --callout-header-surface-emphasis: color-mix(in oklch, var(--color-brand-subtle), var(--color-brand-soft) 25%);
+  --callout-header-text: var(--color-brand-default);
+  --callout-action-surface: var(--color-brand-default);
+  --callout-action-text: var(--color-brand-on-default);
 }
 [data-callout][data-family="attention"] {
   --callout-icon: var(--color-attention-default);
   --callout-link: var(--color-attention-default);
+  --callout-title: var(--color-attention-default);
   --callout-surface-emphasis: var(--color-attention-subtle);
   --callout-border-emphasis: var(--color-attention-soft);
-  --callout-header-surface: var(--color-attention-strong);
-  --callout-header-text: var(--color-attention-on-strong);
+  --callout-header-surface: var(--color-attention-subtle);
+  --callout-header-surface-emphasis: color-mix(in oklch, var(--color-attention-subtle), var(--color-attention-soft) 25%);
+  --callout-header-text: var(--color-attention-default);
+  --callout-action-surface: var(--color-attention-default);
+  --callout-action-text: var(--color-attention-on-default);
 }
 [data-callout][data-family="critical"] {
   --callout-icon: var(--color-critical-default);
   --callout-link: var(--color-critical-default);
+  --callout-title: var(--color-critical-default);
   --callout-surface-emphasis: var(--color-critical-subtle);
   --callout-border-emphasis: var(--color-critical-soft);
-  --callout-header-surface: var(--color-critical-strong);
-  --callout-header-text: var(--color-critical-on-strong);
+  --callout-header-surface: var(--color-critical-subtle);
+  --callout-header-surface-emphasis: color-mix(in oklch, var(--color-critical-subtle), var(--color-critical-soft) 25%);
+  --callout-header-text: var(--color-critical-default);
+  --callout-action-surface: var(--color-critical-default);
+  --callout-action-text: var(--color-critical-on-default);
 }
 [data-callout][data-tone="tinted"] {
   --callout-surface: var(--callout-surface-emphasis);
   --callout-border: var(--callout-border-emphasis);
+  --callout-divider: var(--callout-border-emphasis);
+  --callout-header-surface: var(--callout-header-surface-emphasis);
   --callout-heading: var(--foreground);
   --callout-body: var(--foreground);
+  --callout-shadow: none;
 }
 @media (prefers-reduced-motion: reduce) {
   [data-callout],
