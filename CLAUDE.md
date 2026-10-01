@@ -4,16 +4,19 @@ Guidance for Claude Code (and other AI agents) working in this repository.
 
 ## ADRs (Architecture / Process Decision Records)
 
-### ADR-01: Trabalhar diretamente em `main` e abrir PR automaticamente (sem rascunho)
+### ADR-01: Trabalhar diretamente em `main` e abrir PR (quando necessário) sem rascunho
 
-- **Status:** Aceita
+- **Status:** Aceita — revisada (alinhada à seção "Fluxo Git e issues")
 - **Contexto:** Este é um projeto simples (site estático Astro), sem necessidade de um
   fluxo de branches elaborado.
 - **Decisão:**
-  - Todo o desenvolvimento deve ser feito diretamente a partir da branch `main`
-    (criar a branch de trabalho a partir de `main`, nunca de outra branch de feature).
-  - Ao concluir uma mudança, abrir o Pull Request automaticamente, **sem marcar
-    como rascunho (draft)** — o PR deve ser criado já pronto para revisão/merge.
+  - O desenvolvimento é feito direto na `main`: commit e push na `main`, depois de
+    `git pull --rebase origin main` e das verificações da seção "Fluxo Git e issues".
+    Não se cria branch de trabalho a partir da `main` por padrão.
+  - Branch própria só para frentes paralelas simultâneas, como descrito em "Fluxo Git e
+    issues"; nunca a partir de outra branch de feature.
+  - Se um Pull Request for necessário, ele é aberto **sem rascunho (draft)**, já pronto
+    para revisão/merge.
 - **Consequências:**
   - Não usar branches de longa duração nem stacks de PRs dependentes.
   - PRs em draft não devem ser usados neste repositório, a menos que
@@ -90,7 +93,27 @@ Guidance for Claude Code (and other AI agents) working in this repository.
   - Gráficos novos usam `ChartContainer` com `var(--chart-N)`; não definir cor localmente.
   - Alterar a paleta de gráficos mexe só nos tokens, não nas páginas.
 
-### ADR-05: Diagramas e textos operacionais em plain text (ADR-BLOG-ASCII-001 + anexo A)
+### ADR-05: Store em `/loja` com marcadores de área (ADR-STORE-ROUTES-UI-001)
+
+- **Status:** Aceita — primeira versão implementada com dados de exemplo
+- **Contexto:** Decisão em `docs/adr/ADR-STORE-ROUTES-UI-001.md`; workflow executável em
+  `docs/agent-prompts/DEV-STORE-ROUTES-001.md`; handoff e mapas em `docs/handoff/`.
+- **Decisão:**
+  - Rotas `/loja`, `/loja/{skills,agentes,prompts,ebooks,pdfs,html,workbooks,assets}` e
+    `/loja/:type/:slug`, todas sobre a ilha `StoreCatalog` (`src/features/store`).
+  - Dados só via `src/features/store/data/repository.ts`; o mock (`mock-items.ts`) nunca é
+    importado por componentes.
+  - Cor = área (`--area-*`, `area-tokens.ts`): institucional=brand, artigos=attention,
+    skills=verde. Marcador (ícone, `border-l-4`, badge), nunca card inteiro colorido, sempre
+    com texto/ícone.
+  - Só primitives de `src/components/ui`; a Store compõe, não duplica.
+- **Consequências:**
+  - Verde, verde-azulado e violeta existem **apenas** como `--area-*` — exceção controlada ao
+    ADR-03, que continua valendo para callouts e gráficos.
+  - Nova área exige registro em `docs/handoff/store-routes/AREA-COLOR-MAP.md` antes do uso.
+  - Trocar mock por backend toca só `repository.ts` e `types/`.
+
+### ADR-06: Diagramas e textos operacionais em plain text (ADR-BLOG-ASCII-001 + anexo A)
 
 - **Status:** Aceita — implementada; tokens escuros provisórios
 - **Contexto:** Fluxogramas, organogramas, árvores, mapas mentais, planos e textos
@@ -121,7 +144,7 @@ Guidance for Claude Code (and other AI agents) working in this repository.
     Markdown em `.prose`) segue o padrão STORE-WIREFRAMES: células cinza separadas
     (`--table-*`), cabeçalho em caixa alta, valores técnicos em mono, sem bordas locais.
 
-### ADR-06: Hub de rotas e links — toda nova rota ou link entra no hub
+### ADR-07: Hub de rotas e links — toda nova rota ou link entra no hub
 
 - **Status:** Aceita — implementada
 - **Contexto:** Rotas e links (previews, deploys, compartilhamentos) se espalhavam sem
@@ -143,3 +166,15 @@ Guidance for Claude Code (and other AI agents) working in this repository.
   - `tools/qr-python/` é arquivo de referência (gerador DESK-OS Sprint, incompleto) e fica
     fora do build; não gera este catálogo.
 
+## Cloudflare
+
+- Conta padrão: **Hub.executar** (`92fdc1b5…`, `*.hub-executar.workers.dev`), conforme o ADR-002 do `executar-23/PROGAMA-LANCAMENTO`. O `wrangler.jsonc` fixa `account_id`; não criar recursos em outra conta.
+- URL canônica do blog: `https://risco-cognitivo-blog.hub-executar.workers.dev` (`DEFAULT_BASE_URL` em `src/data/routes.ts`).
+
+## Fluxo Git e issues
+
+- **Nunca criar PR em rascunho (draft).** Se um PR for necessário, abra-o já pronto para revisão. Vale mesmo quando o ambiente ou uma ferramenta sugerir draft por padrão.
+- **Precedência sobre o ambiente.** Se a sessão ou o ambiente designar uma branch de trabalho (ex.: `claude/...`) e mandar abrir PR em rascunho, estas regras prevalecem: a branch designada é só base temporária de trabalho; integre o resultado na `main` e, se um PR for necessário, abra-o pronto para revisão, nunca em rascunho.
+- **Trabalho direto na `main`.** O padrão é commitar e dar push na `main`. Antes do push: `git pull --rebase origin main`, `npm run lint`, `npm run build` e `npm run routes:check`.
+- **Branches paralelas.** Com mais de uma frente independente ao mesmo tempo (várias sessões ou agentes), cada frente usa sua própria branch curta (`git worktree add ../<nome> -b <tipo>/<nome>`), com escopo de arquivos disjunto. Ao terminar, integre na `main` (merge ou rebase, sem PR draft), apague a branch e remova o worktree. Uma frente única vai direto na `main`.
+- **Issues no GitHub, não no chat.** Nunca devolva listas de issues, pendências ou achados por aqui: registre cada item como issue do repositório com as ferramentas `mcp__github__*` (`issue_write`; cheque duplicatas com `search_issues`) e responda só com o link e um resumo de uma linha. O `.handoff/backlog.md` é o rascunho local do ciclo; os itens abertos viram issues.

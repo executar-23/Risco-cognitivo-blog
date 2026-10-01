@@ -7,7 +7,7 @@ import { ROUTE_GROUPS, ROUTES, absoluteUrl, baseUrl, type HubEntry } from '@/dat
 import DefaultLayout from '@/layouts/DefaultLayout.astro';
 import { cn } from '@/lib/utils';
 
-// Hub de rotas e links (ADR-06). A fonte é src/data/routes.ts; os artigos vêm da coleção do blog.
+// Hub de rotas e links (ADR-07). A fonte é src/data/routes.ts; os artigos vêm da coleção do blog.
 const base = baseUrl(import.meta.env.PUBLIC_ROUTES_BASE_URL);
 const posts = await getCollection('blog');
 const blogEntries: HubEntry[] = posts
@@ -161,7 +161,7 @@ const h2 = 'text-primary scroll-mt-28 text-4xl font-medium';
         <li>Confira o QR e a URL neste catálogo; artigos do blog entram sozinhos.</li>
         <li>Marque o item no checklist do PR.</li>
       </ol>
-      <p class="text-muted-foreground mt-4 max-w-2xl text-base font-medium">Detalhes em <code>docs/design-system/ROUTES-HUB-WORKFLOW-001.md</code> e no ADR-06 do <code>CLAUDE.md</code>.</p>
+      <p class="text-muted-foreground mt-4 max-w-2xl text-base font-medium">Detalhes em <code>docs/design-system/ROUTES-HUB-WORKFLOW-001.md</code> e no ADR-07 do <code>CLAUDE.md</code>.</p>
       <p class="mt-6"><a class={buttonVariants({ variant: 'outline' })} href="/admin/tools/qr-python.zip" download>Baixar módulos Python (tools/qr-python)</a></p>
       <p class="text-muted-foreground-subtle mt-2 max-w-2xl text-sm">Arquivo de referência do gerador DESK-OS Sprint; está incompleto (veja o README dentro do zip) e não gera este catálogo.</p>
     </section>

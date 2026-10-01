@@ -1,4 +1,4 @@
-// Hub de rotas e links — fonte única (ADR-06, docs/design-system/ROUTES-HUB-WORKFLOW-001.md).
+// Hub de rotas e links — fonte única (ADR-07, docs/design-system/ROUTES-HUB-WORKFLOW-001.md).
 //
 // Toda nova página em src/pages, ferramenta estática em public/*/index.html e todo link
 // gerado ou compartilhado (preview, deploy, QR) entra aqui, no mesmo PR.
@@ -40,7 +40,7 @@ export interface HubEntry {
 }
 
 /** Host de produção. Sobrescreva com PUBLIC_ROUTES_BASE_URL — nunca use preview de branch nos QRs. */
-export const DEFAULT_BASE_URL = "https://risco-cognitivo-blog.executar-rotina-8b7.workers.dev";
+export const DEFAULT_BASE_URL = "https://risco-cognitivo-blog.hub-executar.workers.dev";
 
 export function baseUrl(env?: string): string {
   return (env || DEFAULT_BASE_URL).replace(/\/+$/, "");
@@ -60,6 +60,7 @@ export const ROUTES: HubEntry[] = [
   { id: "contact", title: "Contato", group: "Site", kind: "route", path: "/contact/", exposure: "public", addedAt: "2026-09-30", source: SRC },
   { id: "faq", title: "Perguntas frequentes", group: "Site", kind: "route", path: "/faq/", exposure: "public", addedAt: "2026-09-30", source: SRC },
   { id: "pricing", title: "Preços", group: "Site", kind: "route", path: "/pricing/", exposure: "public", addedAt: "2026-09-30", source: SRC },
+  { id: "loja", title: "Loja", group: "Site", kind: "route", path: "/loja/", description: "Catálogo de skills, agentes, prompts, e-books, PDFs, ferramentas HTML, workbooks e assets (ADR-05). Categorias em /loja/:tipo/ e itens em /loja/:tipo/:slug/.", exposure: "public", addedAt: "2026-10-01", source: SRC },
   { id: "privacy", title: "Privacidade", group: "Site", kind: "route", path: "/privacy/", exposure: "public", addedAt: "2026-09-30", source: SRC },
 
   // ---------------------------------------------------------------- Blog
@@ -79,6 +80,6 @@ export const ROUTES: HubEntry[] = [
   // ---------------------------------------------------------------- Interno (admin)
   { id: "admin", title: "Painel", group: "Interno (admin)", kind: "route", path: "/admin/", description: "Painel de acesso às ferramentas.", exposure: "internal", addedAt: "2026-09-30", source: SRC },
   { id: "admin-design-system", title: "Design System", group: "Interno (admin)", kind: "route", path: "/admin/design-system/", description: "Mood board, storyboard, tokens, callouts, dados, plain text e componentes.", exposure: "internal", addedAt: "2026-09-30", source: SRC },
-  { id: "admin-relatorio-exemplo", title: "Relatório de exemplo", group: "Interno (admin)", kind: "route", path: "/admin/relatorio-exemplo/", description: "Markdown + PlainTextPanel + AsciiDiagram (ADR-05).", exposure: "internal", addedAt: "2026-09-30", source: SRC },
+  { id: "admin-relatorio-exemplo", title: "Relatório de exemplo", group: "Interno (admin)", kind: "route", path: "/admin/relatorio-exemplo/", description: "Markdown + PlainTextPanel + AsciiDiagram (ADR-06).", exposure: "internal", addedAt: "2026-09-30", source: SRC },
   { id: "admin-rotas", title: "Rotas e links (QR)", group: "Interno (admin)", kind: "route", path: "/admin/rotas/", description: "Este hub.", exposure: "internal", addedAt: "2026-09-30", source: SRC },
 ];

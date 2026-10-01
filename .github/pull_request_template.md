@@ -6,7 +6,7 @@
 
 <!-- npm run build, npx eslint src tests, npx playwright test -->
 
-## Hub de rotas (ADR-06)
+## Hub de rotas (ADR-07)
 
 - [ ] Nenhuma rota nem link novo, **ou** cada nova página (`src/pages`), ferramenta (`public/*/index.html`) e link gerado/compartilhado está em `src/data/routes.ts`
 - [ ] `npm run routes:check` passa

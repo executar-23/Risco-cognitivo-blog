@@ -5,7 +5,7 @@ import { PNG } from "pngjs";
 import { DEFAULT_BASE_URL, ROUTES, ROUTE_GROUPS, absoluteUrl } from "../src/data/routes";
 import { GENERATED_ROUTES, scanBlogSlugs, scanPages, scanPublicTools } from "../src/lib/routes/scan";
 
-// Workflow "toda nova rota ou link gerado entra no hub" (ADR-06).
+// Workflow "toda nova rota ou link gerado entra no hub" (ADR-07).
 // `npm run routes:check` roda este arquivo.
 const ROOT = process.cwd();
 const registered = new Set(ROUTES.filter((r) => r.kind === "route").map((r) => r.path));
@@ -16,7 +16,7 @@ test.describe("registry ↔ repository", () => {
     const missing = [...real].filter((p) => !registered.has(p)).sort();
     expect(
       missing,
-      `Rotas sem registro em src/data/routes.ts (ADR-06):\n  ${missing.join("\n  ")}\nAcrescente uma entrada para cada uma.`,
+      `Rotas sem registro em src/data/routes.ts (ADR-07):\n  ${missing.join("\n  ")}\nAcrescente uma entrada para cada uma.`,
     ).toEqual([]);
   });
 

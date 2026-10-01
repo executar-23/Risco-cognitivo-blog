@@ -1,0 +1,16 @@
+---
+import { StoreCatalog } from '@/features/store/components/store-catalog';
+import { listItems } from '@/features/store/data/repository';
+import DefaultLayout from '@/layouts/DefaultLayout.astro';
+
+const items = listItems();
+---
+
+<DefaultLayout
+  title="Loja"
+  description="Descubra skills, prompts, e-books e ferramentas para apoiar sua execução."
+>
+  <section class="container max-w-5xl pt-32 pb-16 lg:pt-44 lg:pb-24">
+    <StoreCatalog client:load items={items} />
+  </section>
+</DefaultLayout>
