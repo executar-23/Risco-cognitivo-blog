@@ -1,0 +1,26 @@
+---
+import { ArrowRight } from "lucide-react";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  id?: string;
+  href?: string;
+  linkLabel?: string;
+  level?: 2 | 3;
+}
+const { eyebrow, title, id, href, linkLabel = "Ver todos", level = 2 } = Astro.props;
+const H = `h${level}` as "h2" | "h3";
+---
+
+<div class="flex flex-wrap items-end justify-between gap-4">
+  <div>
+    {eyebrow && <p class="rc-eyebrow">{eyebrow}</p>}
+    <H id={id} class="rc-title mt-2 text-2xl sm:text-3xl">{title}</H>
+  </div>
+  {href && (
+    <a href={href} class="rc-link inline-flex items-center gap-1.5 text-sm">
+      {linkLabel} <ArrowRight className="size-4" aria-hidden="true" />
+    </a>
+  )}
+</div>

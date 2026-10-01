@@ -191,6 +191,32 @@ Guidance for Claude Code (and other AI agents) working in this repository.
   - Código novo não usa hex neutro nem `shadow-md/lg/xl` fora de overlay (`tests/surfaces.spec.ts`).
   - Mudar a aparência neutra do blog mexe só nesse bloco de tokens.
 
+### ADR-09: Conteúdo editorial a partir do banco, visual editorial em todas as rotas (HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001)
+
+- **Status:** Aceita — implementada; revisão humana dos artigos pendente
+- **Contexto:** O site ainda era o template Mainline (landing, nav, páginas e posts demo). Registros em
+  `docs/handoff/HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001/` (entradas, rotas, extração dos mood boards,
+  reconciliação, artigos, verificação).
+- **Decisão:**
+  - Banco editorial canônico: `src/data/editorial/seed.json` (CNT, ARG, EVD, TAX, IDE…). O Hub Editorial
+    recebe `public/hub-editorial/seed.js`, gerado no `prebuild`; nunca editar o seed dentro do HTML.
+  - Artigos seguem a skill `executar-block-quick-frameworks` (`tools/`): registro em
+    `src/data/editorial/quick-frameworks/CNT-RC-NNNN.md` (validado por `validate_output.py`) e MDX gerado por
+    `scripts/build-quick-frameworks.mjs` — não editar os `.mdx` gerados. Mermaid vira ```` ```ascii ```` (ADR-06).
+  - Todo post declara `territory` (TAX) e, quando houver, `contentId` e `evidence`; listagens, cards, temas,
+    busca e artigos consomem `getPosts()` (`src/lib/posts.ts`) e `src/lib/editorial.ts`, sem copy duplicada.
+  - Títulos de mockup sem registro no banco vão para o backlog (IDE-RC), não para o site. Dados ilustrativos
+    (autores, datas, contagens) nunca viram conteúdo.
+  - Shell editorial único (`SiteHeader`/`SiteFooter`, `site/nav.ts`), `lang="pt-BR"`, utilitários `rc-*`
+    (`global.css`) e superfícies via `SURFACE` (`components/editorial/surface.ts`) sobre os tokens do ADR-08.
+  - Ferramentas em `public/` consomem `public/ds/surfaces.css`, gerado de `global.css`
+    (`scripts/export-surface-tokens.mjs`); só cores de estado próprias ficam locais.
+  - URLs antigas removidas ganham 301 em `public/_redirects`.
+- **Consequências:**
+  - `tests/content.spec.ts` (`npm run content:check`) falha com arquivo gerado defasado, Quick Framework
+    inválido, território/evidência inexistente, copy de template no build, página sem pt-BR ou link quebrado.
+  - Novo artigo = novo registro QF + `node scripts/build-quick-frameworks.mjs` (ou `npm run build`).
+
 ## Cloudflare
 
 - Conta padrão: **Hub.executar** (`92fdc1b5…`, `*.hub-executar.workers.dev`), conforme o ADR-002 do `executar-23/PROGAMA-LANCAMENTO`. O `wrangler.jsonc` fixa `account_id`; não criar recursos em outra conta.

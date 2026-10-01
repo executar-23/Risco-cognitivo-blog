@@ -1,0 +1,65 @@
+---
+// Página de território (TAX-RC-*): função, pergunta central, inclui / não confundir e artigos.
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
+import ArticleCard from "@/components/editorial/ArticleCard.astro";
+import { SURFACE } from "@/components/editorial/surface";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { TERRITORIES, type Territory, territoryHref } from "@/lib/editorial";
+import { getPosts } from "@/lib/posts";
+
+export function getStaticPaths() {
+  return TERRITORIES.map((territory) => ({ params: { slug: territory.slug }, props: { territory } }));
+}
+
+const { territory } = Astro.props as { territory: Territory };
+const posts = (await getPosts()).filter((p) => p.territory.slug === territory.slug);
+const i = TERRITORIES.findIndex((t) => t.id === territory.id);
+const prev = TERRITORIES[i - 1];
+const next = TERRITORIES[i + 1];
+---
+
+<DefaultLayout title={territory.name} description={`${territory.name} (${territory.role}): ${territory.question}`}>
+  <section class="container pt-12 pb-10 lg:pt-20" aria-labelledby="tema-title">
+    <p class="rc-eyebrow">
+      <a href="/temas/" class="hover:text-foreground">Temas</a> / {territory.id} · {territory.role}
+    </p>
+    <h1 id="tema-title" class="rc-display mt-4 text-5xl sm:text-6xl lg:text-7xl">{territory.name}</h1>
+    <p class="rc-lead mt-5 max-w-2xl text-xl sm:text-2xl">{territory.question}</p>
+  </section>
+
+  <section class="container grid gap-4 md:grid-cols-2" aria-label="Escopo do território">
+    <div class:list={[SURFACE, "p-6"]}>
+      <p class="rc-eyebrow">Inclui</p>
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {territory.includes.map((x) => <li class="bg-background rounded-full border border-[var(--border-default)] px-3 py-1 text-sm">{x}</li>)}
+      </ul>
+    </div>
+    <div class:list={[SURFACE, "p-6"]}>
+      <p class="rc-eyebrow">Não confundir com</p>
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {territory.notToConfuse.map((x) => <li class="bg-background rounded-full border border-[var(--border-default)] px-3 py-1 text-sm">{x}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="container mt-14" aria-labelledby="tema-artigos">
+    <h2 id="tema-artigos" class="rc-title text-2xl sm:text-3xl">Artigos neste tema</h2>
+    {posts.length > 0 ? (
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        {posts.map((p) => <ArticleCard post={p} variant="compact" />)}
+      </div>
+    ) : (
+      <p class="text-muted-foreground mt-4">Ainda não há artigos publicados neste território.</p>
+    )}
+  </section>
+
+  <nav class="container mt-16 flex flex-wrap justify-between gap-4 border-t border-[var(--border-default)] pt-8" aria-label="Territórios vizinhos">
+    {prev ? (
+      <a href={territoryHref(prev)} class="rc-link inline-flex items-center gap-2"><ArrowLeft className="size-4" aria-hidden="true" /> {prev.name}</a>
+    ) : <span />}
+    {next && (
+      <a href={territoryHref(next)} class="rc-link inline-flex items-center gap-2">{next.name} <ArrowRight className="size-4" aria-hidden="true" /></a>
+    )}
+  </nav>
+</DefaultLayout>

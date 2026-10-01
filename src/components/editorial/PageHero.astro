@@ -1,0 +1,16 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  id?: string;
+}
+const { eyebrow, title, lead, id = "page-title" } = Astro.props;
+---
+
+<section class="container pt-12 pb-10 lg:pt-20" aria-labelledby={id}>
+  <p class="rc-eyebrow">{eyebrow}</p>
+  <h1 id={id} class="rc-display mt-4 text-5xl sm:text-6xl lg:text-7xl">{title}</h1>
+  {lead && <p class="rc-lead mt-5 max-w-3xl text-lg sm:text-xl">{lead}</p>}
+  <slot />
+</section>

@@ -59,12 +59,18 @@ export const ROUTES: HubEntry[] = [
   { id: "about", title: "Sobre", group: "Site", kind: "route", path: "/about/", exposure: "public", addedAt: "2026-09-30", source: SRC },
   { id: "contact", title: "Contato", group: "Site", kind: "route", path: "/contact/", exposure: "public", addedAt: "2026-09-30", source: SRC },
   { id: "faq", title: "Perguntas frequentes", group: "Site", kind: "route", path: "/faq/", exposure: "public", addedAt: "2026-09-30", source: SRC },
-  { id: "pricing", title: "Preços", group: "Site", kind: "route", path: "/pricing/", exposure: "public", addedAt: "2026-09-30", source: SRC },
+  { id: "pricing", title: "Acesso e formatos", description: "URL preservada do template; conteúdo aberto e canais do banco editorial.", group: "Site", kind: "route", path: "/pricing/", exposure: "public", addedAt: "2026-09-30", source: SRC },
   { id: "loja", title: "Loja", group: "Site", kind: "route", path: "/loja/", description: "Catálogo de skills, agentes, prompts, e-books, PDFs, ferramentas HTML, workbooks e assets (ADR-05). Categorias em /loja/:tipo/ e itens em /loja/:tipo/:slug/.", exposure: "public", addedAt: "2026-10-01", source: SRC },
   { id: "privacy", title: "Privacidade", group: "Site", kind: "route", path: "/privacy/", exposure: "public", addedAt: "2026-09-30", source: SRC },
 
   // ---------------------------------------------------------------- Blog
-  { id: "blog-index", title: "Blog — início", group: "Blog", kind: "route", path: "/blog/", description: "Home editorial com territórios e artigos.", exposure: "public", addedAt: "2026-09-30", source: SRC },
+  { id: "blog-index", title: "Artigos — explore por assunto", group: "Blog", kind: "route", path: "/blog/", description: "Arquivo com filtro por território (?tema=<slug>). Antigos /blog/post-1…5/ redirecionam (public/_redirects).", exposure: "public", addedAt: "2026-09-30", source: SRC },
+
+  { id: "temas", title: "Mapa de temas", group: "Blog", kind: "route", path: "/temas/", description: "Os 8 territórios TAX-RC do banco editorial. Cada um em /temas/:slug/.", exposure: "public", addedAt: "2026-10-01", source: "HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001" },
+  { id: "mapas", title: "Mapas e modelos", group: "Blog", kind: "route", path: "/mapas/", description: "Framework de Risco Cognitivo como mapa conceitual em plain text.", exposure: "public", addedAt: "2026-10-01", source: "HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001" },
+  { id: "guias", title: "Guias e ferramentas", group: "Blog", kind: "route", path: "/guias/", description: "Modelo de análise e primeiros passos por território.", exposure: "public", addedAt: "2026-10-01", source: "HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001" },
+  { id: "evidencias", title: "Evidências", group: "Blog", kind: "route", path: "/evidencias/", description: "Banco de evidências EVD-RC com autor, ano, link e classe epistêmica.", exposure: "public", addedAt: "2026-10-01", source: "HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001" },
+  { id: "buscar", title: "Busca e navegação", group: "Blog", kind: "route", path: "/buscar/", description: "Busca client-side em artigos, temas e evidências (?q=).", exposure: "public", addedAt: "2026-10-01", source: "HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001" },
 
   // ---------------------------------------------------------------- Ferramentas públicas
   { id: "hub-editorial", title: "Hub Editorial", group: "Ferramentas públicas", kind: "route", path: "/hub-editorial/", description: "Painel de gestão do pipeline editorial.", exposure: "public", addedAt: "2026-09-30", source: SRC },
@@ -72,8 +78,8 @@ export const ROUTES: HubEntry[] = [
   { id: "catalogo-offline", title: "Catálogo EXECUTAR (offline)", group: "Ferramentas públicas", kind: "route", path: "/catalogo-offline/", description: "Versão offline do catálogo, com detalhamento 3P.", exposure: "public", addedAt: "2026-09-30", source: SRC },
 
   // ---------------------------------------------------------------- Sistema
-  { id: "login", title: "Login", group: "Sistema", kind: "route", path: "/login/", exposure: "public", addedAt: "2026-09-30", source: SRC },
-  { id: "signup", title: "Cadastro", group: "Sistema", kind: "route", path: "/signup/", exposure: "public", addedAt: "2026-09-30", source: SRC },
+  { id: "login", title: "Acesso (sem contas de leitor)", description: "URL preservada; noindex.", group: "Sistema", kind: "route", path: "/login/", exposure: "public", addedAt: "2026-09-30", source: SRC },
+  { id: "signup", title: "Receber novidades", description: "Newsletter desativada até haver provedor; noindex.", group: "Sistema", kind: "route", path: "/signup/", exposure: "public", addedAt: "2026-09-30", source: SRC },
   { id: "rss", title: "Feed RSS", group: "Sistema", kind: "route", path: "/rss.xml", description: "Endpoint, não página.", exposure: "public", addedAt: "2026-09-30", source: SRC },
   { id: "sitemap", title: "Sitemap", group: "Sistema", kind: "route", path: "/sitemap-index.xml", description: "Gerado pela integração @astrojs/sitemap.", exposure: "public", addedAt: "2026-09-30", source: SRC },
 

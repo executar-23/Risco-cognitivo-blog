@@ -1,0 +1,18 @@
+---
+import { type PostView, formatDate } from "@/lib/posts";
+
+interface Props {
+  post: PostView;
+  showId?: boolean;
+  class?: string;
+}
+const { post, showId = true, class: cls } = Astro.props;
+---
+
+<p class:list={["rc-meta flex flex-wrap items-center gap-x-3 gap-y-1", cls]}>
+  {showId && post.contentId && <span>{post.contentId}</span>}
+  {showId && post.contentId && <span aria-hidden="true" class="h-3 border-l border-[var(--border-strong)]"></span>}
+  <span>{post.minutes} min de leitura</span>
+  <span aria-hidden="true" class="h-3 border-l border-[var(--border-strong)]"></span>
+  <time datetime={post.pubDate.toISOString().slice(0, 10)}>{formatDate(post.pubDate)}</time>
+</p>

@@ -1,13 +1,11 @@
 ---
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-
-import { Background } from '@/components/background';
-import SignupSection from '@/components/blocks/signup-section';
-import DefaultLayout from '@/layouts/DefaultLayout.astro';
+// /signup/ preservada: inscrição na newsletter (mood board 07), desativada até haver provedor.
+import NewsletterNotice from "@/components/editorial/NewsletterNotice.astro";
+import PageHero from "@/components/editorial/PageHero.astro";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
 ---
 
-<DefaultLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <Background>
-    <SignupSection />
-  </Background>
+<DefaultLayout title="Receber novidades" description="Inscrição na newsletter do Risco Cognitivo." noindex>
+  <PageHero eyebrow="Receba novos guias" title="Conteúdo prático no seu e-mail" lead="Novos artigos, modelos e guias para aplicar o framework no dia a dia." />
+  <section class="container max-w-3xl"><NewsletterNotice /></section>
 </DefaultLayout>

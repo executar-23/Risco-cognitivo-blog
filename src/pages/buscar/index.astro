@@ -1,0 +1,220 @@
+---
+// Busca e navegação (mood board 08). Índice estático gerado no build a partir da coleção
+// e do banco editorial; a busca roda no navegador. Sem JavaScript, o formulário e os temas
+// continuam navegáveis.
+import { Search } from "lucide-react";
+
+import { SURFACE } from "@/components/editorial/surface";
+import { AsciiDiagram } from "@/components/plain";
+import { TERRITORY_TREE } from "@/data/editorial/framework";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { EVIDENCE, TERRITORIES, evidenceYear, territoryHref } from "@/lib/editorial";
+import { getPosts, typeLabel } from "@/lib/posts";
+
+const posts = await getPosts();
+const index = [
+  ...posts.map((p) => ({
+    kind: "artigo",
+    id: p.contentId ?? p.id,
+    title: p.title,
+    text: p.description,
+    tags: [...p.tags, p.territory.name],
+    href: p.href,
+    meta: `${typeLabel(p.type)} · ${p.minutes} min de leitura`,
+    date: p.pubDate.toISOString().slice(0, 10),
+  })),
+  ...TERRITORIES.map((t) => ({
+    kind: "tema",
+    id: t.id,
+    title: t.name,
+    text: t.question,
+    tags: [...t.includes, t.role],
+    href: territoryHref(t),
+    meta: `Tema · ${t.role}`,
+    date: "",
+  })),
+  ...EVIDENCE.map((e) => ({
+    kind: "evidencia",
+    id: e.id,
+    title: e.title,
+    text: e.supports,
+    tags: [e.author, e.institution, e.type],
+    href: `/evidencias/#${e.id}`,
+    meta: `Evidência · ${e.author} · ${evidenceYear(e)}`,
+    date: e.date,
+  })),
+];
+const tagCount = new Map<string, number>();
+posts.flatMap((p) => p.tags).forEach((t) => tagCount.set(t, (tagCount.get(t) ?? 0) + 1));
+const suggestions = [...tagCount.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([t]) => t);
+const tabs = [
+  { id: "todos", label: "Todos" },
+  { id: "artigo", label: "Artigos" },
+  { id: "tema", label: "Temas" },
+  { id: "evidencia", label: "Evidências" },
+];
+---
+
+<DefaultLayout title="Buscar" description="Busque artigos, temas e evidências do Risco Cognitivo.">
+  <div class="container grid grid-cols-1 gap-10 pt-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14 lg:pt-20">
+    <section aria-labelledby="busca-title" class="min-w-0">
+      <p class="rc-eyebrow">Buscar conhecimento</p>
+      <h1 id="busca-title" class="rc-display mt-4 text-5xl sm:text-6xl">Busca e navegação</h1>
+      <p class="rc-lead mt-5 max-w-2xl text-lg">Encontre artigos, temas e evidências e navegue pela arquitetura do framework.</p>
+
+      <form action="/buscar/" method="get" role="search" class="mt-8 flex gap-2 rounded-[var(--surface-radius-card)] border border-[var(--border-strong)] p-1.5 focus-within:ring-[3px] focus-within:ring-ring/50" data-search-form>
+        <label for="q" class="sr-only">Termo de busca</label>
+        <Search className="text-muted-foreground ml-2 size-5 shrink-0 self-center" aria-hidden="true" />
+        <input id="q" name="q" type="search" autocomplete="off" placeholder="Ex.: interrupções, checklist, ISO 31000" class="h-11 min-w-0 flex-1 bg-transparent px-2 text-lg outline-none" />
+        <button type="submit" class="bg-primary text-primary-foreground hover:bg-primary/90 h-11 shrink-0 rounded-md px-5 font-medium focus-visible:ring-[3px] focus-visible:ring-ring/50 outline-none">Buscar</button>
+      </form>
+      <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+        <span class="text-muted-foreground">Sugestões:</span>
+        {suggestions.map((s) => (
+          <a href={`/buscar/?q=${encodeURIComponent(s)}`} data-suggest={s} class="inline-flex h-8 items-center rounded-full bg-[var(--surface-hover)] px-3 transition-colors hover:bg-[var(--surface-selected)]">{s}</a>
+        ))}
+      </div>
+
+      <div class="mt-10 flex flex-wrap items-end justify-between gap-4 border-b border-[var(--border-default)]">
+        <div role="tablist" aria-label="Tipo de resultado" class="-mb-px flex gap-1 overflow-x-auto">
+          {tabs.map((t, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${t.id}`}
+              aria-selected={i === 0 ? "true" : "false"}
+              aria-controls="resultados"
+              tabindex={i === 0 ? 0 : -1}
+              data-tab={t.id}
+              class="aria-selected:border-primary aria-selected:text-primary text-foreground h-11 shrink-0 border-b-2 border-transparent px-3 font-medium outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            >
+              {t.label} (<span data-count={t.id}>0</span>)
+            </button>
+          ))}
+        </div>
+        <label class="mb-2 flex items-center gap-2 text-sm">
+          <span class="text-muted-foreground">Ordenar por</span>
+          <select data-sort class="border-input bg-background h-9 rounded-md border px-2 text-sm outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50">
+            <option value="relevancia">Mais relevantes</option>
+            <option value="recentes">Mais recentes</option>
+          </select>
+        </label>
+      </div>
+
+      <p class="sr-only" aria-live="polite" data-status></p>
+      <div id="resultados" role="tabpanel" aria-labelledby="tab-todos" data-tabpanel>
+        <ol class="divide-y divide-[var(--border-default)]" data-results></ol>
+      </div>
+      <noscript><p class="text-muted-foreground py-6">A busca precisa de JavaScript. Navegue pelos <a class="rc-link" href="/temas/">temas</a> ou pelos <a class="rc-link" href="/blog/">artigos</a>.</p></noscript>
+    </section>
+
+    <aside class="flex flex-col gap-6 lg:pt-10" aria-label="Navegação por temas">
+      <div class:list={[SURFACE, "p-5"]}>
+        <p class="rc-eyebrow flex items-center justify-between"><span>Arquitetura</span><a href="/temas/" class="rc-link normal-case tracking-normal">Mapa completo</a></p>
+        <div class="mt-4"><AsciiDiagram id="MAP-TERRITORIES-002" kind="tree" title="Territórios" source={TERRITORY_TREE} fontSize="sm" density="compact" /></div>
+      </div>
+      <div class:list={[SURFACE, "p-5"]}>
+        <p class="rc-eyebrow">Temas relacionados</p>
+        <ul class="mt-4 flex flex-wrap gap-2">
+          {TERRITORIES.map((t) => (
+            <li><a href={territoryHref(t)} class="bg-background inline-flex h-8 items-center rounded-full border border-[var(--border-default)] px-3 text-sm hover:text-primary">{t.short}</a></li>
+          ))}
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <script type="application/json" id="search-index" set:html={JSON.stringify(index)} />
+</DefaultLayout>
+
+<script>
+  type Item = { kind: string; id: string; title: string; text: string; tags: string[]; href: string; meta: string; date: string };
+  const LABEL: Record<string, string> = { artigo: "Artigo", tema: "Tema", evidencia: "Evidência" };
+  const items: Item[] = JSON.parse(document.getElementById("search-index")!.textContent || "[]");
+  const norm = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+  const input = document.querySelector<HTMLInputElement>("#q")!;
+  const list = document.querySelector<HTMLOListElement>("[data-results]")!;
+  const panel = document.querySelector<HTMLElement>("[data-tabpanel]")!;
+  const status = document.querySelector("[data-status]")!;
+  const sort = document.querySelector<HTMLSelectElement>("[data-sort]")!;
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>("[data-tab]")];
+  let tab = "todos";
+
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
+
+  function score(item: Item, terms: string[]) {
+    if (!terms.length) return 1;
+    const title = norm(item.title), text = norm(item.text), tags = norm(item.tags.join(" ")), id = norm(item.id);
+    let total = 0;
+    for (const t of terms) {
+      const s = (title.includes(t) ? 6 : 0) + (tags.includes(t) ? 3 : 0) + (text.includes(t) ? 1 : 0) + (id.includes(t) ? 4 : 0);
+      if (!s) return 0;
+      total += s;
+    }
+    return total;
+  }
+
+  function render() {
+    const q = input.value.trim();
+    const terms = norm(q).split(/\s+/).filter(Boolean);
+    const scored = items.map((i) => ({ i, s: score(i, terms) })).filter((x) => x.s > 0);
+    for (const t of tabs) {
+      const n = t.dataset.tab === "todos" ? scored.length : scored.filter((x) => x.i.kind === t.dataset.tab).length;
+      t.querySelector("[data-count]")!.textContent = String(n);
+    }
+    let shown = scored.filter((x) => tab === "todos" || x.i.kind === tab);
+    shown = sort.value === "recentes"
+      ? shown.sort((a, b) => b.i.date.localeCompare(a.i.date))
+      : shown.sort((a, b) => b.s - a.s);
+    list.innerHTML = shown.length
+      ? shown.map(({ i }) => `
+        <li class="py-5">
+          <p class="rc-eyebrow"><span class="text-primary">${LABEL[i.kind]}</span> · <span>${esc(i.id)}</span></p>
+          <h2 class="rc-title mt-2 text-xl"><a href="${i.href}" class="hover:underline">${esc(i.title)}</a></h2>
+          <p class="text-muted-foreground mt-1.5 leading-relaxed">${esc(i.text)}</p>
+          <p class="rc-meta mt-2">${esc(i.meta)}</p>
+        </li>`).join("")
+      : `<li class="text-muted-foreground py-8">Nenhum resultado para “${esc(q)}”. Tente outro termo ou navegue pelos <a class="rc-link" href="/temas/">temas</a>.</li>`;
+    status.textContent = `${shown.length} resultado${shown.length === 1 ? "" : "s"}`;
+  }
+
+  function selectTab(btn: HTMLButtonElement, focus = false) {
+    tab = btn.dataset.tab!;
+    tabs.forEach((t) => {
+      const on = t === btn;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+    });
+    panel.setAttribute("aria-labelledby", btn.id);
+    if (focus) btn.focus();
+    render();
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => selectTab(t));
+    t.addEventListener("keydown", (e) => {
+      const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (d) selectTab(tabs[(i + d + tabs.length) % tabs.length], true);
+    });
+  });
+  document.querySelector("[data-search-form]")!.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const url = new URL(location.href);
+    if (input.value.trim()) url.searchParams.set("q", input.value.trim());
+    else url.searchParams.delete("q");
+    history.replaceState(null, "", url);
+    render();
+  });
+  document.querySelectorAll<HTMLAnchorElement>("[data-suggest]").forEach((a) =>
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      input.value = a.dataset.suggest!;
+      input.dispatchEvent(new Event("input"));
+      history.replaceState(null, "", `?q=${encodeURIComponent(input.value)}`);
+    }),
+  );
+  input.addEventListener("input", render);
+  sort.addEventListener("change", render);
+  input.value = new URL(location.href).searchParams.get("q") ?? "";
+  render();
+</script>

@@ -1,13 +1,18 @@
 ---
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+// /login/ preservada: o blog não tem contas de leitor; conteúdo é aberto.
+import { ArrowRight } from "lucide-react";
 
-import { Background } from '@/components/background';
-import LoginSection from '@/components/blocks/login-section';
-import DefaultLayout from '@/layouts/DefaultLayout.astro';
+import PageHero from "@/components/editorial/PageHero.astro";
+import { buttonVariants } from "@/components/ui/button";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { cn } from "@/lib/utils";
 ---
 
-<DefaultLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <Background>
-    <LoginSection />
-  </Background>
+<DefaultLayout title="Acesso" description="O Risco Cognitivo não exige conta para leitura." noindex>
+  <PageHero eyebrow="Acesso" title="Não é preciso entrar" lead="O blog não tem contas de leitor: artigos, mapas, guias e evidências são abertos.">
+    <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+      <a href="/blog/" class={cn(buttonVariants({ size: "lg" }), "gap-2")}>Ler os artigos <ArrowRight className="size-4" aria-hidden="true" /></a>
+      <a href="/signup/" class="rc-link">Receber novidades</a>
+    </div>
+  </PageHero>
 </DefaultLayout>

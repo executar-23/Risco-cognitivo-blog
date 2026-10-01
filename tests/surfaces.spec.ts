@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -207,12 +208,132 @@ test.describe("flat cards, real overlays", () => {
   });
 });
 
+// HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001: the same contract on every editorial route and tool.
+const EDITORIAL = [
+  "/",
+  "/blog/",
+  "/blog/o-que-e-risco-cognitivo/",
+  "/temas/",
+  "/temas/controles-cognitivos/",
+  "/mapas/",
+  "/guias/",
+  "/evidencias/",
+  "/buscar/?q=risco",
+  "/about/",
+  "/faq/",
+  "/contact/",
+  "/pricing/",
+  "/signup/",
+  "/login/",
+  "/privacy/",
+  "/rota-inexistente/",
+];
+
+test.describe("editorial routes", () => {
+  for (const route of EDITORIAL) {
+    test(`${route}: neutral cards, no overflow at 390/768/1363 in both themes`, async ({ page }) => {
+      test.setTimeout(90_000);
+      for (const theme of ["light", "dark"] as const) {
+        await useTheme(page, theme);
+        for (const width of [390, 768, 1363]) {
+          await page.setViewportSize({ width, height: 900 });
+          await page.goto(route);
+          await expectTheme(page, theme);
+          expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), `${theme} ${width}px`).toBeLessThanOrEqual(0);
+        }
+        const cards = await page.locator('[class*="bg-[var(--surface-default)]"]').evaluateAll((nodes) =>
+          nodes.map((el) => {
+            const cs = getComputedStyle(el);
+            return { bg: cs.backgroundColor, border: cs.borderTopColor, radius: cs.borderTopLeftRadius, shadow: cs.boxShadow };
+          }),
+        );
+        const surface = await resolve(page, "background-color", "var(--surface-default)");
+        const border = await resolve(page, "background-color", "var(--border-default)");
+        for (const c of cards) {
+          expect({ bg: c.bg, border: c.border, radius: c.radius }, theme).toEqual({ bg: surface, border, radius: "12px" });
+          expect(paintsShadow(c.shadow), `shadow: ${c.shadow}`).toBe(false);
+        }
+      }
+    });
+  }
+
+  test("axe: no serious or critical issues on editorial routes", async ({ page }) => {
+    test.setTimeout(180_000);
+    for (const route of EDITORIAL) {
+      await page.goto(route);
+      await page.waitForLoadState("networkidle");
+      const { violations } = await new AxeBuilder({ page }).analyze();
+      const serious = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+      expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).slice(0, 3).join(" | ")}`), route).toEqual([]);
+    }
+  });
+
+  test("keyboard: skip link and visible focus on the primary nav", async ({ page }) => {
+    await page.setViewportSize({ width: 1363, height: 900 });
+    await page.goto("/blog/");
+    await page.keyboard.press("Tab");
+    const skip = page.getByRole("link", { name: "Pular para o conteúdo" });
+    await expect(skip).toBeFocused();
+    await expect(skip).toBeVisible();
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Tab");
+    const focused = page.locator(":focus");
+    const ring = await focused.evaluate((e) => getComputedStyle(e).boxShadow);
+    expect(paintsShadow(ring) || ring.includes("rgb"), "focus ring").toBe(true);
+    await expect(page.locator('header nav[aria-label="Principal"] a[aria-current="page"]')).toHaveText("Artigos");
+  });
+});
+
+test.describe("standalone tools share the token source", () => {
+  for (const [route, token] of [
+    ["/hub-editorial/", "--surface"],
+    ["/skills/", "--c-surface"],
+    ["/catalogo-offline/", "--surface"],
+  ] as const) {
+    for (const theme of ["light", "dark"] as const) {
+      test(`${route} ${theme}: neutral surface and border come from /ds/surfaces.css`, async ({ page }) => {
+        await page.emulateMedia({ colorScheme: theme });
+        await page.goto(route);
+        await page.waitForLoadState("networkidle");
+        const probe = (v: string) => resolve(page, "background-color", v);
+        expect(await probe(`var(${token})`)).toBe(await probe("var(--ds-surface-default)"));
+        if (theme === "light") expect(await probe(`var(${token})`)).toBe("rgb(248, 248, 248)");
+        else expect(await probe(`var(${token})`)).not.toBe("rgb(248, 248, 248)");
+      });
+    }
+  }
+
+  test("Hub dashboard table: segmented cells, header surface, no row borders", async ({ page }) => {
+    await page.goto("/hub-editorial/");
+    // The Hub renders with React/Babel from cdnjs; the contract under test is its CSS, so a
+    // static table with the same classes is injected (works offline and behind proxies).
+    await page.evaluate(() => {
+      const wrap = document.createElement("div");
+      wrap.className = "dash-table-wrap";
+      wrap.innerHTML = '<table class="dash-table"><thead><tr><th>ID</th></tr></thead><tbody><tr><td>CNT-RC-0001</td></tr></tbody></table>';
+      document.body.prepend(wrap);
+    });
+    const table = page.locator(".dash-table").first();
+    await expect(table).toBeVisible();
+    const s = await table.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      const th = getComputedStyle(el.querySelector("th")!);
+      const td = getComputedStyle(el.querySelector("td")!);
+      return { collapse: cs.borderCollapse, spacing: cs.borderSpacing.split(" ")[0], th: th.backgroundColor, td: td.backgroundColor, tdBorder: td.borderBottomWidth, radius: td.borderTopLeftRadius };
+    });
+    expect(s).toEqual({ collapse: "separate", spacing: "3px", th: "rgb(235, 235, 235)", td: "rgb(248, 248, 248)", tdBorder: "0px", radius: "2px" });
+  });
+});
+
 test.describe("visual regression (minimum routes)", () => {
   const shots: [string, string][] = [
     ["admin", "/admin/"],
     ["blog", "/blog/"],
     ["article", "/blog/do-risco-cognitivo-a-execucao-assistida/"],
     ["loja", "/loja/"],
+    ["home", "/"],
+    ["temas", "/temas/"],
+    ["evidencias", "/evidencias/"],
   ];
   for (const [name, route] of shots) {
     for (const [label, size] of [["desktop", { width: 1280, height: 900 }], ["mobile", { width: 390, height: 844 }]] as const) {
