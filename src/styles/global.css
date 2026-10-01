@@ -40,23 +40,44 @@
 :root {
   /* Design tokens from DESIGN-HANDOFF-001 (hex -> oklch) */
   --background: oklch(1 0 0); /* color-bg-canvas #FFFFFF */
-  --foreground: oklch(0.232 0.004 286.1); /* color-text-primary #1D1D1F */
-  --card: oklch(1 0 0); /* color-surface-primary #FFFFFF */
-  --card-foreground: oklch(0.232 0.004 286.1);
+  --foreground: #111111; /* text primary */
+  --card: var(--surface-default); /* ADR-08: cards use the neutral surface */
+  --card-foreground: #111111;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.232 0.004 286.1);
-  --primary: oklch(0.554 0.185 256.05); /* color-accent #0A6FDB */
+  --primary: oklch(0.552 0.171 260.25); /* brand blue #306DD4 (ADR-08) */
+  --primary-hover: oklch(0.495 0.164 260.81); /* #255CBD */
+  --primary-soft: oklch(0.966 0.016 262.75); /* #EEF4FF — background only; blue text on it is < 4.5:1 */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.971 0.003 286.35); /* color-bg-subtle #F5F5F7 */
-  --secondary-foreground: oklch(0.232 0.004 286.1);
-  --muted: oklch(0.971 0.003 286.35); /* color-bg-subtle #F5F5F7 */
-  --muted-foreground: oklch(0.54 0.008 286.14); /* color-text-secondary #6E6E73 */
-  --accent: oklch(0.971 0.003 286.35);
-  --accent-foreground: oklch(0.232 0.004 286.1);
+  --secondary: var(--surface-hover);
+  --secondary-foreground: #111111;
+  --muted: var(--surface-hover);
+  --muted-foreground: #6a6a72; /* text secondary — AA on every neutral surface */
+  --accent: var(--surface-hover);
+  --accent-foreground: #111111;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.865 0.007 286.26); /* color-border-subtle #D2D2D7 */
-  --input: oklch(0.865 0.007 286.26);
-  --ring: oklch(0.554 0.185 256.05); /* color-focus #0A6FDB */
+  --border: var(--border-default);
+  --input: oklch(0.865 0.007 286.26); /* control boundary #D2D2D7: stays stronger than --border */
+  --ring: oklch(0.552 0.171 260.25); /* = --primary */
+
+  /* Surfaces & Elevation (ADR-08 / DS-SURFACE-UNIFICATION-001): the one neutral contract.
+     Only this block, the --plain-* aliases and the dark overrides hold neutral hex values. */
+  --surface-page: var(--background); /* #FFFFFF */
+  --surface-default: #f8f8f8; /* cards, table cells, panels, diagrams */
+  --surface-subtle: #fafafa; /* secondary areas */
+  --surface-hover: #f3f3f3; /* hover; also --muted / --secondary / --accent */
+  --surface-selected: #eeeeee; /* selected item / row */
+  --border-subtle: #f0f0f0;
+  --border-default: #ebebeb; /* structure only: never text, icon or a state by itself */
+  --border-strong: #dadada;
+  --elevation-flat: none;
+  --elevation-raised: 0 1px 2px rgb(0 0 0 / 0.04); /* controls (xs/sm) */
+  --elevation-overlay: 0 8px 28px rgb(0 0 0 / 0.1); /* popover, dialog, drawer, sheet, hover-card */
+  --surface-radius-card: var(--radius-xl);
+  --surface-radius-cell: var(--radius-sm);
+  /* compatibility with the handoff names */
+  --surface-neutral: var(--surface-default);
+  --surface-neutral-border: var(--border-default);
 
   /* Chart palette (ADR-04): semantic layer over the 3 families + neutral; never new hues. */
   --chart-1: var(--color-brand-default);
@@ -66,7 +87,7 @@
   --chart-5: var(--muted-foreground);
   /* Extra-gray text (captions, axis ticks, timestamps). AA only on card/background/popover;
      on muted/secondary surfaces use --muted-foreground. */
-  --muted-foreground-subtle: oklch(0.56 0.008 286.14);
+  --muted-foreground-subtle: #727272; /* 4.53:1 on #F8F8F8 — only on card/background/popover */
 
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -79,18 +100,15 @@
 
   --radius: 8px;
 
-  --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl:
-    0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-  --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+  /* Elevation contract (ADR-08): two levels. xs/sm = raised (controls); md..2xl = overlay. */
+  --shadow-2xs: var(--elevation-raised);
+  --shadow-xs: var(--elevation-raised);
+  --shadow-sm: var(--elevation-raised);
+  --shadow: var(--elevation-raised);
+  --shadow-md: var(--elevation-overlay);
+  --shadow-lg: var(--elevation-overlay);
+  --shadow-xl: var(--elevation-overlay);
+  --shadow-2xl: var(--elevation-overlay);
 
   --font-dm-sans: "DM Sans", sans-serif;
   --font-inter:
@@ -171,11 +189,11 @@
 
   /* Plain text system (ADR-05 / ADR-BLOG-ASCII-001 + annex A). Surface, border and
      text come from the reference capture; accent aliases the site primary (ADR-03). */
-  --plain-surface: #f8f8f8;
-  --plain-border: #ebebeb;
-  --plain-text: #000000;
+  --plain-surface: var(--surface-default); /* alias: no parallel visual system */
+  --plain-border: var(--border-default);
+  --plain-text: var(--foreground);
   --plain-accent: var(--primary);
-  --plain-accent-soft: var(--color-brand-subtle);
+  --plain-accent-soft: var(--primary-soft);
   --plain-radius-desktop: 28px;
   --plain-radius-mobile: 22px;
   --plain-font:
@@ -196,8 +214,8 @@
   --plain-body-padding-mobile: 18px 20px 24px;
   --plain-muted: var(--muted-foreground);
   /* Tables (ADR-05 §15, STORE-WIREFRAMES reference): separated gray cells. */
-  --table-surface: var(--plain-surface);
-  --table-head-surface: var(--plain-border);
+  --table-surface: var(--surface-default);
+  --table-head-surface: var(--border-default);
   --table-gap: 3px;
   --table-text: var(--plain-text);
   --table-link: var(--primary);
@@ -205,7 +223,7 @@
   --table-radius: 2px;
   --table-font-size: 1rem;
   --table-head-weight: 500;
-  --table-selected: var(--brand-50);
+  --table-selected: var(--surface-selected);
 
   /* Layer 3 — callout component tokens (handoff §5) */
   --callout-accent-blue: var(--color-brand-default);
@@ -236,7 +254,7 @@
   --callout-glyph-lg: calc(var(--spacing) * 5);
   /* Full anatomy (header / body / footer) — DS-CALLOUT-001 v1.2, Material X reference */
   --callout-card-radius: calc(var(--radius) * 2 - 4px); /* radius-xl */
-  --callout-card-shadow: var(--shadow-md);
+  --callout-card-shadow: var(--elevation-flat); /* cards are flat (ADR-08) */
   --callout-header-height: calc(var(--spacing) * 11);
   --callout-header-padding-x: calc(var(--spacing) * 4);
   --callout-body-padding: calc(var(--spacing) * 5);
@@ -305,11 +323,20 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* PROVISIONAL — plain surface on the dark canvas (no dark spec in ADR-BLOG-ASCII-001). */
-  --plain-surface: var(--card);
-  --plain-border: var(--border);
-  --plain-text: var(--foreground);
-  --table-head-surface: var(--muted);
+  /* PROVISIONAL — surface contract on the dark canvas (no dark spec in ADR-08).
+     --plain-* and --table-* follow these through their aliases. */
+  --surface-default: oklch(0.294 0.004 286.18);
+  --surface-subtle: oklch(0.27 0.004 286.15);
+  --surface-hover: oklch(0.261 0.004 286.14);
+  --surface-selected: oklch(0.349 0.003 286.22);
+  --border-default: oklch(0.349 0.003 286.22);
+  --border-subtle: oklch(0.31 0.003 286.2);
+  --border-strong: oklch(0.42 0.003 286.2);
+  --elevation-raised: 0 1px 2px rgb(0 0 0 / 0.4);
+  --elevation-overlay: 0 8px 28px rgb(0 0 0 / 0.5);
+  --primary-hover: oklch(0.78 0.13 252.35);
+  --primary-soft: oklch(0.3 0.05 260);
+  --table-head-surface: var(--surface-selected);
 
   /* PROVISIONAL — no dark spec in DS-CALLOUT-001; same families, roles inverted
      for a dark canvas. Replace when a dark theme spec exists. */
@@ -437,6 +464,8 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted-foreground-subtle: var(--muted-foreground-subtle);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
@@ -632,8 +661,8 @@ body {
   --callout-divider: var(--border);
   --callout-heading: var(--callout-text-strong);
   --callout-body: var(--callout-text-default);
-  --callout-emblem-surface: var(--card);
-  --callout-emblem-ring: var(--border);
+  --callout-emblem-surface: var(--surface-page);
+  --callout-emblem-ring: var(--border-strong);
   --callout-shadow: var(--callout-card-shadow);
 }
 [data-callout][data-family="brand"] {
@@ -720,6 +749,11 @@ body {
 .ds-table td,
 .prose table td {
   background: var(--table-surface);
+}
+/* A table inside a card: cells step up to the page surface so they stay visible. */
+[data-slot="card"] .ds-table td,
+.plain-surface .ds-table td {
+  background: var(--surface-page);
 }
 .ds-table tr[data-state="selected"] td {
   background: var(--table-selected);

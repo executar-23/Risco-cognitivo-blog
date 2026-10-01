@@ -76,11 +76,11 @@ Em TSX/Astro, use a prop `source` (ou `children` string). Para gerar a árvore a
 
 | Token | Valor |
 |---|---|
-| `--plain-surface` | `#F8F8F8` (escuro provisório: `--card`) |
-| `--plain-border` | `#EBEBEB` (escuro provisório: `--border`) |
-| `--plain-text` | `#000000` (escuro provisório: `--foreground`) |
-| `--plain-accent` | `var(--primary)` — **desvio:** o `#3A83F7` da captura não foi criado (ADR-03 proíbe matiz nova) |
-| `--plain-accent-soft` | `var(--color-brand-subtle)` (no lugar de `#E4EDF5`) |
+| `--plain-surface` | alias de `--surface-default` (#F8F8F8; ADR-08) |
+| `--plain-border` | alias de `--border-default` (#EBEBEB; ADR-08) |
+| `--plain-text` | alias de `--foreground` (#111111; ADR-08) |
+| `--plain-accent` | `var(--primary)` (#306DD4, ADR-08) |
+| `--plain-accent-soft` | `var(--primary-soft)` (#EEF4FF) |
 | `--plain-radius-desktop` / `-mobile` | `28px` / `22px` |
 | `--plain-font` | `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace` |
 | `--plain-font-size` | `clamp(0.875rem, 1.6vw, 1.125rem)` (piso 0.875rem no mobile) |

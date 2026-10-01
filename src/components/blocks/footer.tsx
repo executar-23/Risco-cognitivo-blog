@@ -98,7 +98,7 @@ export function Footer() {
               gradientUnits="userSpaceOnUse"
             >
               <stop stopColor="currentColor" />
-              <stop offset="1" stopColor="#F8F8F8" stopOpacity="0.41" />
+              <stop offset="1" style={{ stopColor: "var(--surface-default)" }} stopOpacity="0.41" />
             </linearGradient>
           </defs>
         </svg>

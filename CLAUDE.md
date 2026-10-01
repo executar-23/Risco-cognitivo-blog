@@ -60,7 +60,8 @@ Guidance for Claude Code (and other AI agents) working in this repository.
     semântico (`--color-{família}-{subtle,soft,default,strong,on-strong}`) →
     componente (`--callout-*`) → variante (`data-family` / `data-tone`).
     Nunca variante → hex.
-  - O primário do site (#0A6FDB, botões e links) não muda.
+  - O primário do site é #306DD4 (botões, links, títulos; ADR-08 substituiu o #0A6FDB). As
+    famílias `brand`/`attention`/`critical` dos callouts não mudam.
   - Modo escuro: papéis semânticos invertidos no `.dark`, marcados como PROVISIONAL
     até existir especificação de tema escuro.
 - **Consequências:**
@@ -165,6 +166,30 @@ Guidance for Claude Code (and other AI agents) working in this repository.
   - Rota nova sem registro não passa nos testes; rota removida exige remover a entrada.
   - `tools/qr-python/` é arquivo de referência (gerador DESK-OS Sprint, incompleto) e fica
     fora do build; não gera este catálogo.
+
+### ADR-08: Superfícies, bordas e elevação (DS-SURFACE-UNIFICATION-001)
+
+- **Status:** Aceita — implementada; tema escuro provisório
+- **Contexto:** O visual aprovado das tabelas (cinza muito claro, separação limpa, borda discreta)
+  vivia só em `--plain-*`, enquanto cards usavam `--card`/`--border` e cinco níveis de sombra
+  sem regra. Handoff em `docs/handoff/surface-unification/`; contrato em
+  `docs/design-system/DS-SURFACE-UNIFICATION-001.md`.
+- **Decisão:**
+  - Camada "Surfaces & Elevation" em `src/styles/global.css`: `--surface-{page,subtle,default,hover,selected}`,
+    `--border-{subtle,default,strong}`, `--elevation-{flat,raised,overlay}`. É o único lugar com
+    hex neutro; `--plain-*`, `--table-*`, `--card`, `--border`, `--muted` são aliases.
+  - Card, painel, célula de tabela, Plain/Ascii: `surface-default` + `border-default` + **sem sombra**.
+    Hover por superfície (`surface-hover`), não por sombra.
+  - Sombra só indica elevação: `raised` em controles (`shadow-xs/sm`), `overlay` em popover, dialog,
+    drawer, sheet, hover-card e menus (`shadow-md…`). Tabela dentro de card usa células na superfície da página.
+  - `#EBEBEB` é estrutural (contraste ~1,1:1): nunca texto, ícone ou estado só por borda; contorno de
+    campos segue em `--input`.
+  - Texto: `--foreground` #111111, `--muted-foreground` #6A6A72, `--muted-foreground-subtle` #727272
+    (AA sobre `surface-default`; o #737373 do handoff não passa). Marca: `--primary` #306DD4.
+  - Callouts semânticos mantêm suas famílias cromáticas; só o card perde a sombra.
+- **Consequências:**
+  - Código novo não usa hex neutro nem `shadow-md/lg/xl` fora de overlay (`tests/surfaces.spec.ts`).
+  - Mudar a aparência neutra do blog mexe só nesse bloco de tokens.
 
 ## Cloudflare
 
