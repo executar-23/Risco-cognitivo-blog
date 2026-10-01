@@ -1,5 +1,6 @@
 {
   // Cloudflare Workers config for serving the pre-built Astro static site.
+  "account_id": "92fdc1b556435f2e3d62517f3041422e",
   "name": "risco-cognitivo-blog",
   "main": "worker/index.ts",
   "compatibility_date": "2025-03-07",

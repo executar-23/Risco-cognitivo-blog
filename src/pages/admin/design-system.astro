@@ -1,6 +1,7 @@
 ---
 import { ComponentGallery } from '@/components/design-system/component-gallery';
 import { DataGallery } from '@/components/design-system/data-gallery';
+import { AsciiDiagram, PlainTextPanel, renderTree } from '@/components/plain';
 import { buttonVariants } from '@/components/ui/button';
 import { Callout } from '@/components/ui/callout';
 import { CALLOUT_VARIANTS, CALLOUT_VARIANT_NAMES } from '@/components/ui/callout-registry';
@@ -14,6 +15,7 @@ const sections = [
   { id: 'tokens', label: 'Tokens' },
   { id: 'callouts', label: 'Callouts' },
   { id: 'dados', label: 'Dados e charts' },
+  { id: 'plain', label: 'Plain text' },
   { id: 'componentes', label: 'Componentes' },
 ];
 const families = ['brand', 'attention', 'critical'] as const;
@@ -48,6 +50,141 @@ const chartPalette = [
   ['chart-4', 'brand.500 (primitivo)', 'série única clara (radar, áreas)'],
   ['chart-5', 'muted-foreground', 'meta e referência (traço tracejado)'],
 ];
+// ---- Plain text system (ADR-06 / ADR-BLOG-ASCII-001 + annex A)
+const storeRows = [
+  ['STORE_HEADER', 'StoreHeader (h1 + descrição + selo "Catálogo de exemplo")', 'components/store-header.tsx', 'texto fixo', 'READY'],
+  ['SEARCH + FILTER', 'Input[type=search] + Select', 'store-header.tsx', 'q, area', 'READY'],
+  ['TABS', 'Tabs em ScrollArea horizontal', 'components/store-catalog.tsx', 'ITEM_TYPES', 'READY'],
+  ['CATEGORIAS', 'CategoryCard × tipos com itens', 'components/category-card.tsx', 'contagem por tipo', 'READY'],
+  ['DESTAQUE', 'FeaturedItem', 'components/featured-item.tsx', 'item.featured', 'READY'],
+  ['SKILLS + "Ver todas"', 'CatalogSection + SkillCard × 4', 'catalog-section.tsx, skill-card.tsx', 'type=skill', 'READY'],
+  ['E-BOOKS + "Ver todos"', 'CatalogSection + VisualProductCard × 3', 'visual-product-card.tsx', 'type=ebook', 'READY'],
+  ['(estados)', 'CatalogSkeleton / CatalogEmpty / CatalogError', 'catalog-states.tsx', 'status, resultados', 'LOADING/EMPTY/ERROR'],
+];
+const plainTokens = [
+  ['--plain-surface', '#F8F8F8 (escuro: --card)'],
+  ['--plain-border', '#EBEBEB (escuro: --border)'],
+  ['--plain-text', '#000000 (escuro: --foreground)'],
+  ['--plain-accent', 'var(--primary) — sem matiz nova'],
+  ['--plain-accent-soft', 'var(--color-brand-subtle)'],
+  ['--plain-radius-desktop / mobile', '28px / 22px'],
+  ['--plain-font', 'ui-monospace, SFMono-Regular, Menlo…'],
+  ['--plain-font-size', 'clamp(0.875rem, 1.6vw, 1.125rem)'],
+];
+const orgchart = `FASE 01
+│
+├── 01. ENTRADA / PLANEJAMENTO
+│   │
+│   ├── 01.01 Plano / Campanha
+│   │   ├── definir tema
+│   │   ├── definir estrutura
+│   │   ├── definir objetivo
+│   │   └── definir diretrizes
+│   │
+│   └── 01.02 Pesquisa de Insumos
+│       ├── documentos
+│       ├── artigos
+│       ├── referências
+│       ├── imagens
+│       └── vídeos
+│
+└── 02. PESQUISA / COLETA
+    ├── 02.01 Executar pesquisa
+    └── 02.02 Registrar na base`;
+const flowchart = `A0
+│
+▼
+A1
+│
+▼
+A2
+│   aprovação humana
+▼
+A3
+│
+▼
+A4
+    executar
+    verificar
+    evidenciar`;
+const treeJson = {
+  label: 'RELATÓRIO',
+  children: [
+    { label: 'MARKDOWN NORMAL', children: [{ label: 'títulos' }, { label: 'parágrafos' }, { label: 'listas' }, { label: 'tabelas' }] },
+    { label: 'PLAIN TEXT PANEL', children: [{ label: 'instrução' }, { label: 'procedimento' }, { label: 'definição' }, { label: 'evidência' }] },
+    { label: 'ASCII DIAGRAM', children: [{ label: 'flowchart' }, { label: 'organograma' }, { label: 'arquitetura' }] },
+  ],
+};
+const treeFromJson = renderTree(treeJson);
+const directory = `src/
+│
+├── components/
+│   └── plain/
+│       ├── PlainSurface.tsx
+│       ├── PlainTextPanel.tsx
+│       ├── AsciiDiagram.tsx
+│       ├── CopyButton.tsx
+│       ├── plain.types.ts
+│       ├── PlainSurface.css
+│       ├── PlainTextPanel.css
+│       ├── AsciiDiagram.css
+│       └── index.ts
+│
+└── lib/
+    └── plain/
+        ├── normalizeText.ts
+        ├── normalizeDiagram.ts
+        ├── renderTree.ts
+        ├── remarkPlain.ts
+        ├── copy.ts
+        └── types.ts`;
+const mindmap = `                 ┌── definir problema
+                 ├── decompor fatores
+   RISCO ────────┤
+   COGNITIVO     ├── medir exposição
+                 └── registrar evidência
+                 │
+                 ▼
+          PROCESSO NEUROADAPTATIVO`;
+const wide = `ENTRADA ──► TRIAGEM ──► PESQUISA ──► ESTRUTURA ──► REDAÇÃO ──► REVISÃO TÉCNICA ──► REVISÃO EDITORIAL ──► PUBLICAÇÃO ──► MEDIÇÃO ──► APRENDIZADO`;
+const panels = [
+  { kind: 'instruction', title: 'Instrução', source: `Não iniciar workflows novos diretamente em A3 ou A4.
+Sequência inicial:
+1. definir escopo;
+2. identificar ferramentas;
+3. mapear permissões;
+4. executar em A1/A2;
+5. ampliar autonomia somente após validação.` },
+  { kind: 'procedure', title: 'Procedimento', source: `01  abrir o briefing
+02  listar insumos e fontes
+03  validar critérios de conclusão
+04  produzir o rascunho
+05  registrar evidências da revisão` },
+  { kind: 'definition', title: 'Definição', source: `A0  ORIENTAR
+    nenhuma ação externa
+A1  PREPARAR
+    gera plano ou artefato
+A2  HUMAN-IN-THE-LOOP
+    humano autoriza execução` },
+  { kind: 'decision', title: 'Decisão', source: `DECISÃO   ADOTADA
+DATA      2026-09-30
+ESCOPO    diagramas e textos operacionais do blog
+MOTIVO    conteúdo copiável, pesquisável e acessível` },
+  { kind: 'status', title: 'Estado', source: `STATUS              IMPLEMENTED
+responsividade      OK
+acessibilidade      OK
+clipboard           OK
+design tokens       OK` },
+  { kind: 'evidence', title: 'Evidência', source: `teste     tests/plain.spec.ts
+resultado aprovado
+build     npm run build — sem erros
+link      /admin/relatorio-exemplo` },
+];
+const longText = `Este painel demonstra a regra do anexo A, seção 6: o texto operacional usa a mesma superfície dos diagramas, mas quebra a linha automaticamente para que a leitura no celular não dependa de rolagem horizontal. Identificadores longos como REPORT-GENERATOR-CONTRACT-001/REGRA-06/texto-longo-sem-espacos-para-testar-quebra também quebram sem estourar o layout.
+
+As quebras de linha e os espaços do autor continuam preservados:
+    - item recuado
+    - outro item recuado`;
 const storyboard = [
   { n: '01', title: 'Blog — início', route: '/blog/', image: '/about/1.webp', uses: 'Hero, Button, cards de território, filtros' },
   { n: '02', title: 'Territórios', route: '/blog/#territorios-title', image: '/about/2.webp', uses: 'Filtro (Button outline sm), cards' },
@@ -320,6 +457,69 @@ const lead = 'text-muted-foreground mt-3 max-w-2xl text-lg font-medium';
       <p class={lead}>Indicadores, seis tipos de gráfico, tabela de dados e estados de carregamento, vazio e erro, todos nos tokens do sistema.</p>
       <div class="mt-8 min-w-0">
         <DataGallery client:visible />
+      </div>
+    </section>
+
+    <!-- Plain text & diagramas -->
+    <section id="plain" class="mt-20" aria-labelledby="plain-title">
+      <h2 id="plain-title" class={h2}>Plain text e diagramas</h2>
+      <p class={lead}>
+        Diagramas e textos operacionais como texto UTF-8 com caracteres de desenho de caixa: copiáveis,
+        pesquisáveis e acessíveis, sem SVG, Mermaid ou imagem (ADR-06). Veja o
+        <a href="/admin/relatorio-exemplo/" class="text-primary underline underline-offset-4">relatório de exemplo</a>.
+      </p>
+
+      <h3 class="mt-10 text-xl font-medium">Tokens</h3>
+      <div class="mt-4 overflow-x-auto">
+        <table class="ds-table" data-testid="plain-tokens">
+          <thead><tr><th scope="col">Token</th><th scope="col">Valor</th></tr></thead>
+          <tbody>
+            {plainTokens.map(([t, v]) => (
+              <tr><td><code>{t}</code></td><td>{v}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">Tabelas</h3>
+      <p class="text-muted-foreground mt-2 text-base font-medium">Todas as tabelas (componente <code>Table</code> e tabelas Markdown) usam células cinza separadas, cabeçalho em caixa alta e valores técnicos em mono.</p>
+      <div class="mt-4 overflow-x-auto" data-testid="table-reference">
+        <table class="ds-table">
+          <caption class="sr-only">Store Hub — wireframe para código</caption>
+          <thead><tr><th scope="col">Wireframe_node</th><th scope="col">Component</th><th scope="col">Source_file</th><th scope="col">Data</th><th scope="col">State</th></tr></thead>
+          <tbody>
+            {storeRows.map(([n, c, f, d, st]) => (
+              <tr><td>{n}</td><td><code>{c}</code></td><td>{f.startsWith('components/') ? <a href="#plain">{f}</a> : <code>{f}</code>}</td><td>{d.includes(' ') ? d : <code>{d}</code>}</td><td>{st}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="mt-10 text-xl font-medium">AsciiDiagram · preserva a geometria</h3>
+      <div class="mt-4 grid gap-6 lg:grid-cols-2" data-testid="plain-diagrams">
+        <AsciiDiagram id="FLOW-OPS-001" kind="orgchart" title="Organograma OPS / CAVORK" source={orgchart} />
+        <div class="flex min-w-0 flex-col">
+          <AsciiDiagram id="FLOW-AUTONOMY-001" kind="flowchart" title="Progressão de autonomia" source={flowchart} className="mt-0" />
+          <AsciiDiagram id="TREE-REPORT-001" kind="tree" title="Gerado por renderTree(JSON)" source={treeFromJson} caption="Entrada JSON hierárquica; o componente desenha ├── └── │ de forma determinística." />
+        </div>
+        <AsciiDiagram id="DIR-PLAIN-001" kind="directory" title="Estrutura de código" source={directory} density="compact" />
+        <AsciiDiagram id="MAP-RISK-001" kind="mindmap" title="Mapa mental" source={mindmap} />
+      </div>
+      <AsciiDiagram id="FLOW-WIDE-001" kind="workflow" title="Diagrama largo · rolagem horizontal" source={wide} caption="Linhas largas rolam dentro do bloco; a página não ganha rolagem lateral." />
+
+      <h3 class="mt-10 text-xl font-medium">PlainTextPanel · quebra texto longo</h3>
+      <div class="mt-4 grid gap-6 lg:grid-cols-2" data-testid="plain-panels">
+        {panels.map((p) => (
+          <PlainTextPanel id={`PANEL-${p.kind.toUpperCase()}-001`} kind={p.kind as any} title={p.title} source={p.source} className="my-0" />
+        ))}
+      </div>
+      <PlainTextPanel id="PANEL-LONG-001" kind="example" title="Texto longo" source={longText} />
+
+      <h3 class="mt-10 text-xl font-medium">Variantes</h3>
+      <div class="mt-4 grid gap-6 lg:grid-cols-3" data-testid="plain-variants">
+        <PlainTextPanel id="PANEL-COLLAPSIBLE-001" kind="data" title="collapsible" source={`Conteúdo em <details> nativo:\nabre e fecha sem JavaScript.`} collapsible className="my-0" />
+        <AsciiDiagram id="FLOW-SM-001" kind="generic" title="fontSize sm · comfortable" source={flowchart.split('\n').slice(0, 7).join('\n')} fontSize="sm" density="comfortable" className="my-0" />
+        <PlainTextPanel id="PANEL-NOCOPY-001" kind="generic" title="copyable={false}" source={`Sem botão de copiar.\nO texto continua selecionável.`} copyable={false} className="my-0" />
       </div>
     </section>
 
