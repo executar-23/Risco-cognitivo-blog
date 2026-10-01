@@ -1,20 +1,27 @@
 ---
 import BaseHead from '@/components/BaseHead.astro';
-import { Footer } from '@/components/blocks/footer';
-import { Navbar } from '@/components/blocks/navbar';
+import SiteFooter from '@/components/site/SiteFooter.astro';
+import SiteHeader from '@/components/site/SiteHeader.astro';
 
-const { title, description } = Astro.props;
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const { title, description, image, noindex } = Astro.props;
 ---
 
-<html lang="en">
-    <head>		
-        <BaseHead title={title} description={description}  />
+<html lang="pt-BR">
+    <head>
+        <BaseHead title={title} description={description} image={image} noindex={noindex} />
     </head>
-    <body class={`h-screen antialiased`}
-    >
-        <Navbar client:only='react' />
-        <main><slot /></main>
-        <Footer />
+    <body class="bg-background text-foreground min-h-screen antialiased">
+        <a href="#conteudo" class="bg-primary text-primary-foreground sr-only z-[60] rounded-md px-4 py-2 focus:not-sr-only focus:fixed focus:top-3 focus:left-3">Pular para o conteúdo</a>
+        <SiteHeader />
+        <main id="conteudo"><slot /></main>
+        <SiteFooter />
         <script>
             // Copy buttons of PlainTextPanel / AsciiDiagram (ADR-06)
             import '@/lib/plain/copy';

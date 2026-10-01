@@ -1,19 +1,21 @@
 {
-  "name": "mainline-astro-template",
+  "name": "risco-cognitivo-blog",
   "type": "module",
   "version": "1.2.0",
-  "author": "shadcnblocks.com",
+  "author": "Risco Cognitivo",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/build-quick-frameworks.mjs && node scripts/sync-editorial-seed.mjs && node scripts/export-surface-tokens.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint . --fix",
     "format": "prettier -w .",
-    "deploy": "astro build && wrangler deploy",
-    "cf:dev": "astro build && wrangler dev",
-    "test:visual": "astro build && playwright test",
-    "routes:check": "playwright test tests/routes.spec.ts"
+    "deploy": "npm run build && wrangler deploy",
+    "cf:dev": "npm run build && wrangler dev",
+    "test:visual": "npm run build && playwright test",
+    "routes:check": "playwright test tests/routes.spec.ts",
+    "content:check": "node scripts/build-quick-frameworks.mjs --check && playwright test tests/content.spec.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.7",

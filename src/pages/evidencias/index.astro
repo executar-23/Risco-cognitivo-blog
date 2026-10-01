@@ -1,0 +1,61 @@
+---
+// Evidências (mood board 06): registros reais EVD-RC-* do banco editorial, sem exemplos ilustrativos.
+import EvidenceTable from "@/components/editorial/EvidenceTable.astro";
+import { SURFACE } from "@/components/editorial/surface";
+import { PlainTextPanel } from "@/components/plain";
+import seed from "@/data/editorial/seed.json";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { EVIDENCE } from "@/lib/editorial";
+
+const classes = seed.vocab.classeEpistemica as string[];
+const count = (c: string) => EVIDENCE.filter((e) => e.epistemicClass === c).length;
+const CLASS_TEXT: Record<string, string> = {
+  "A · Observado": "visto diretamente em campo",
+  "B · Primário": "fonte original: estudo, norma ou guia institucional",
+  "C · Publicado": "livro ou texto profissional publicado",
+  "D · Interno": "definição ou decisão do próprio framework",
+  "E · Inferido": "conclusão derivada de outras fontes",
+};
+const process = `PERGUNTA      o que precisa ser sustentado?
+   │
+   ▼
+BUSCA         fonte original → instituição → pesquisa → secundária confiável
+   │
+   ▼
+REGISTRO      EVD-RC-NNNN: autor, ano, URL, o que sustenta, classe
+   │
+   ▼
+LEITURA       citar só o que a fonte demonstra; limites no texto`;
+---
+
+<DefaultLayout title="Evidências" description="Fontes do Risco Cognitivo: estudos, normas e guias com autor, ano, link e o que cada uma sustenta.">
+  <section class="container pt-12 pb-10 lg:pt-20" aria-labelledby="evid-title">
+    <p class="rc-eyebrow text-primary">Evidências</p>
+    <h1 id="evid-title" class="rc-display mt-4 text-5xl sm:text-6xl lg:text-7xl">Da pergunta à evidência</h1>
+    <p class="rc-lead mt-5 max-w-3xl text-lg sm:text-xl">
+      Cada afirmação central dos artigos aponta para um registro deste banco. Aqui estão todos, com o que cada
+      fonte sustenta — e o que ela não sustenta.
+    </p>
+  </section>
+
+  <section class="container grid gap-10 [&>*]:min-w-0 lg:grid-cols-[1.8fr_1fr] lg:gap-14" aria-label="Banco de evidências">
+    <div class="min-w-0">
+      <p class="rc-meta mb-4">{EVIDENCE.length} registros · atualizados pelo Hub Editorial</p>
+      <EvidenceTable items={EVIDENCE} caption="Banco de evidências do Risco Cognitivo" />
+    </div>
+    <aside class="flex flex-col gap-6">
+      <PlainTextPanel id="EVIDENCE-PROCESS-001" kind="procedure" title="Como registramos" source={process} density="compact" fontSize="sm" />
+      <div class:list={[SURFACE, "p-6"]}>
+        <p class="rc-eyebrow">Classes epistêmicas</p>
+        <dl class="mt-4 space-y-3 text-sm">
+          {classes.map((c) => (
+            <div>
+              <dt class="font-medium">{c} <span class="rc-meta ml-1">{count(c)}</span></dt>
+              <dd class="text-muted-foreground">{CLASS_TEXT[c] ?? ""}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </aside>
+  </section>
+</DefaultLayout>

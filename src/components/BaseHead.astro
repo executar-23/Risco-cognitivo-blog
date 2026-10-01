@@ -5,15 +5,19 @@ import '../styles/global.css';
 import { SITE_TITLE, SITE_METADATA } from '../consts';
 
 interface Props {
-	title: string;
-	description: string;
+	title?: string;
+	description?: string;
 	image?: string;
+	/** Páginas sem valor de busca (ex.: formulários desativados) passam `noindex`. */
+	noindex?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image } = Astro.props;
-const finalTitle = title || SITE_METADATA.title.default;
+const { title, description, image, noindex } = Astro.props;
+const finalTitle = title
+	? SITE_METADATA.title.template.replace('%s', title)
+	: SITE_METADATA.title.default;
 const finalDescription = description || SITE_METADATA.description;
 const finalImage = image || SITE_METADATA.openGraph.images[0].url;
 const imageURL = new URL(finalImage, Astro.url);
@@ -46,7 +50,7 @@ const imageURL = new URL(finalImage, Astro.url);
 />
 
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="robots" content={`${SITE_METADATA.robots.index ? 'index' : 'noindex'}, ${SITE_METADATA.robots.follow ? 'follow' : 'nofollow'}`} />
+<meta name="robots" content={`${SITE_METADATA.robots.index && !noindex ? 'index' : 'noindex'}, ${SITE_METADATA.robots.follow ? 'follow' : 'nofollow'}`} />
 <meta name="keywords" content={SITE_METADATA.keywords.join(', ')} />
 <meta name="author" content={SITE_METADATA.authors[0].name} />
 <meta name="creator" content={SITE_METADATA.creator} />
@@ -105,6 +109,7 @@ const imageURL = new URL(finalImage, Astro.url);
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
+<meta property="og:locale" content="pt_BR" />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:site_name" content={SITE_METADATA.openGraph.siteName} />
 <meta property="og:title" content={finalTitle} />
@@ -120,4 +125,4 @@ const imageURL = new URL(finalImage, Astro.url);
 <meta property="twitter:title" content={finalTitle} />
 <meta property="twitter:description" content={finalDescription} />
 <meta property="twitter:image" content={imageURL} />
-<meta property="twitter:creator" content={SITE_METADATA.twitter.creator} />
+

@@ -1,0 +1,45 @@
+---
+// Tabela de evidências do banco (padrão STORE-WIREFRAMES / ADR-08). Sem dados ilustrativos.
+import { ArrowUpRight } from "lucide-react";
+
+import { type Evidence, evidenceYear } from "@/lib/editorial";
+
+interface Props {
+  items: Evidence[];
+  caption: string;
+  compact?: boolean;
+}
+const { items, caption, compact = false } = Astro.props;
+---
+
+<div class="overflow-x-auto" role="region" aria-label={caption} tabindex="0">
+  <table class="ds-table w-full min-w-[40rem] text-left text-sm">
+    <caption class="sr-only">{caption}</caption>
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Fonte</th>
+        {!compact && <th scope="col">Tipo</th>}
+        <th scope="col">Ano</th>
+        {!compact && <th scope="col">O que sustenta</th>}
+      </tr>
+    </thead>
+    <tbody>
+      {items.map((e) => (
+        <tr id={e.id}>
+          <td class="whitespace-nowrap"><code>{e.id}</code></td>
+          <td>
+            <a href={e.url} rel="noopener" class="inline-flex items-start gap-1 font-medium">
+              <span>{e.title}</span>
+              <ArrowUpRight className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+            </a>
+            <span class="text-muted-foreground mt-1 block">{e.author} · {e.institution}</span>
+          </td>
+          {!compact && <td>{e.type}<span class="text-muted-foreground block text-xs">{e.epistemicClass}</span></td>}
+          <td><code>{evidenceYear(e)}</code></td>
+          {!compact && <td class="text-muted-foreground">{e.supports}</td>}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

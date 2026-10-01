@@ -9,7 +9,7 @@ import remarkPlain from "./src/lib/plain/remarkPlain.ts";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://example.com",
+  site: "https://risco-cognitivo-blog.hub-executar.workers.dev",
   integrations: [mdx({ remarkPlugins: [remarkPlain] }), sitemap(), react()],
   output: "static",
 

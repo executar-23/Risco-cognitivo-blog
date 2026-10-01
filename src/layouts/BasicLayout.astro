@@ -1,24 +1,17 @@
 ---
-import BaseHead from "@/components/BaseHead.astro";
-import { Footer } from "@/components/blocks/footer";
-import { Navbar } from "@/components/blocks/navbar";
+// Página de texto corrido (Markdown/MDX em src/pages), ex.: /privacy/.
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
 
-const { title, description } = Astro.props;
+const { title, description, eyebrow } = Astro.props.frontmatter ?? Astro.props;
 ---
 
-<html lang="en">
-  <head>
-    <BaseHead title={title} description={description} />
-  </head>
-  <body class={`h-screen antialiased`}>
-    <Navbar client:only='react' />
-    <main>
-      <section class="mx-auto max-w-2xl px-4 py-28 lg:pt-44 lg:pb-32">
-        <article class="prose prose-lg dark:prose-invert">
-          <slot />
-        </article>
-      </section>
-    </main>
-    <Footer />
-  </body>
-</html>
+<DefaultLayout title={title} description={description}>
+  <section class="container max-w-3xl pt-12 pb-8 lg:pt-20">
+    {eyebrow && <p class="rc-eyebrow">{eyebrow}</p>}
+    {title && <h1 class="rc-display mt-4 text-4xl sm:text-5xl lg:text-6xl">{title}</h1>}
+    {description && <p class="rc-lead mt-6 text-lg sm:text-xl">{description}</p>}
+  </section>
+  <article class="prose prose-lg dark:prose-invert prose-headings:rc-title container max-w-3xl" data-plain-page>
+    <slot />
+  </article>
+</DefaultLayout>

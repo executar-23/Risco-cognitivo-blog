@@ -18,7 +18,7 @@ const item = getItem(def.type, Astro.params.slug!)!;
 ---
 
 <DefaultLayout title={`${item.name} — Loja`} description={item.description}>
-  <section class="container max-w-5xl pt-32 pb-16 lg:pt-44 lg:pb-24">
+  <section class="container max-w-5xl pt-12 pb-16 lg:pt-20 lg:pb-24">
     <ItemDetail client:load item={item} />
   </section>
 </DefaultLayout>

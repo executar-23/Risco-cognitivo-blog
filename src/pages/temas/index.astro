@@ -1,0 +1,42 @@
+---
+// Mapa de temas (mood board 09): os 8 territórios TAX-RC do banco editorial.
+import SectionHeader from "@/components/editorial/SectionHeader.astro";
+import TerritoryCard from "@/components/editorial/TerritoryCard.astro";
+import { AsciiDiagram } from "@/components/plain";
+import { TERRITORY_TREE } from "@/data/editorial/framework";
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { TERRITORIES } from "@/lib/editorial";
+import { getPosts } from "@/lib/posts";
+
+const posts = await getPosts();
+const count = (slug: string) => posts.filter((p) => p.territory.slug === slug).length;
+---
+
+<DefaultLayout title="Temas" description="Os oito territórios do Risco Cognitivo: fenômeno, fatores, exposição, eventos, controles, indicadores, gestão e framework.">
+  <section class="container pt-12 pb-12 lg:pt-20" aria-labelledby="temas-title">
+    <p class="rc-eyebrow">Explorar</p>
+    <h1 id="temas-title" class="rc-display mt-4 text-5xl sm:text-6xl lg:text-7xl">Mapa de temas</h1>
+    <p class="rc-lead mt-5 max-w-2xl text-lg sm:text-xl">
+      Navegue pelos territórios do blog e veja como eles se conectam. Cada tema responde a uma pergunta
+      e reúne os artigos que tratam dela.
+    </p>
+  </section>
+
+  <section class="container grid gap-10 [&>*]:min-w-0 lg:grid-cols-[1fr_1.4fr] lg:gap-14" aria-label="Territórios">
+    <div>
+      <AsciiDiagram id="MAP-TERRITORIES-001" kind="tree" title="Territórios do Risco Cognitivo" source={TERRITORY_TREE} />
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {TERRITORIES.map((t) => <TerritoryCard territory={t} count={count(t.slug)} />)}
+    </div>
+  </section>
+
+  <section class="container mt-16" aria-labelledby="conexoes">
+    <SectionHeader id="conexoes" eyebrow="Conexões" title="Do fator ao indicador" href="/mapas/" linkLabel="Ver o mapa do framework" />
+    <p class="text-muted-foreground mt-4 max-w-3xl">
+      Os territórios seguem uma cadeia: fatores aumentam a probabilidade, a exposição diz quando eles passam a
+      importar, eventos registram o que aconteceu, controles reduzem probabilidade ou impacto, indicadores mostram
+      se os controles funcionam e a gestão fecha o ciclo.
+    </p>
+  </section>
+</DefaultLayout>

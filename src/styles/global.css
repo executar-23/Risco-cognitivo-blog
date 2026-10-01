@@ -608,9 +608,13 @@
   color: var(--foreground);
 }
 
-/* Operational reports (ADR-05) read as documents: no editorial drop cap. */
+/* Operational reports (ADR-05) read as documents: no editorial drop cap.
+   Articles (.rc-prose, mood board 03) keep it only on the opening paragraph. */
 .prose[data-report] > p:first-of-type::first-letter,
-.prose[data-report] h2 + p::first-letter {
+.prose[data-report] h2 + p::first-letter,
+.rc-prose h2 + p:not(:first-of-type)::first-letter,
+.prose[data-plain-page] > p:first-of-type::first-letter,
+.prose[data-plain-page] h2 + p::first-letter {
   float: none;
   font-family: inherit;
   font-size: inherit;
@@ -782,4 +786,98 @@ body {
 .prose thead,
 .prose tbody tr {
   border: 0;
+}
+
+/* ===== Editorial (HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001) =====================
+   Gramática dos mood boards: título grande e apertado, rótulo mono em caixa alta,
+   lead em cinza. Só tipografia e espaço: cor e superfície continuam nos tokens
+   de ADR-03/ADR-08 (nenhuma matiz ou cinza novo). */
+:root {
+  --font-editorial: "Inter", var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --editorial-display-tracking: -0.045em;
+  --editorial-eyebrow-tracking: 0.14em;
+  --editorial-measure: 68ch;
+}
+@utility rc-display {
+  font-family: var(--font-editorial);
+  font-weight: 800;
+  letter-spacing: var(--editorial-display-tracking);
+  line-height: 0.98;
+  text-wrap: balance;
+}
+@utility rc-title {
+  font-family: var(--font-editorial);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+@utility rc-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: var(--editorial-eyebrow-tracking);
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+@utility rc-meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+@utility rc-lead {
+  font-family: var(--font-editorial);
+  color: var(--muted-foreground);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+@utility rc-link {
+  color: var(--primary);
+  font-weight: 500;
+  text-underline-offset: 4px;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+@utility rc-rule {
+  border-color: var(--border-default);
+}
+
+/* Corpo dos artigos: sans editorial, títulos com a mesma gramática do display. */
+.rc-prose {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-links: var(--primary);
+  --tw-prose-bold: var(--foreground);
+  font-family: var(--font-editorial);
+}
+.rc-prose :where(h2, h3) {
+  font-family: var(--font-editorial);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.rc-prose :where(h2) {
+  margin-top: 2.5em;
+}
+.rc-prose :where(p, li) {
+  text-wrap: pretty;
+}
+.rc-prose :where(a) {
+  text-underline-offset: 4px;
+}
+/* Markdown tables scroll inside the column instead of widening the page. */
+.rc-prose :where(table) {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Anchors land below the sticky site header. */
+html {
+  scroll-padding-top: 5.5rem;
 }
