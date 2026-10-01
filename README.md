@@ -1,76 +1,36 @@
-# Mainline Astro Template
+# Risco Cognitivo — blog
 
-Mainline is a free template built with shadcn/ui, Tailwind 4 and Astro 5.
+Blog e framework sobre risco cognitivo: como atenção, memória e julgamento participam da formação do
+risco no trabalho, e como identificar, controlar e acompanhar esse risco.
 
-- [Demo](https://mainline-astro-template.vercel.app/)
-- [Documentation](https://docs.shadcnblocks.com/templates/getting-started)
-- [Figma](https://www.figma.com/design/cFCLMj7DFv0sK7EVsqKeTa/Mainline?node-id=23250-13201&t=I1nAdchDpknii5Bd-1)
+Produção: https://risco-cognitivo-blog.hub-executar.workers.dev
 
-![Mainline Astro Template screenshot](./public/og-image.jpg)
-
-## Getting Started
+## Rodar localmente
 
 ```bash
 npm install
+npm run dev          # servidor de desenvolvimento
+npm run build        # prebuild (quick frameworks + seed do Hub) + astro build
+npm run lint
+npm run routes:check # hub de rotas (ADR-07)
+npm run content:check
+npm run test:visual  # Playwright (inclui regressão visual)
 ```
 
-```bash
-npm run dev
-```
+## Onde está cada coisa
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| Caminho | Conteúdo |
+|---|---|
+| `src/data/editorial/seed.json` | Banco editorial canônico (CNT, ARG, EVD, TAX…). Alimenta o site e o Hub Editorial (`public/hub-editorial/seed.js`, gerado). |
+| `src/data/editorial/quick-frameworks/` | Artigos no formato da skill `executar-block-quick-frameworks` (fonte dos `.mdx` gerados). |
+| `src/content/blog/` | Artigos publicados. Os gerados trazem o aviso “não edite à mão”. |
+| `src/styles/global.css` | Tokens (ADR-03, ADR-04, ADR-08) e utilitários editoriais `rc-*`. |
+| `src/data/routes.ts` | Hub de rotas (ADR-07). |
+| `docs/` | ADRs, especificações do design system e handoffs. |
+| `CLAUDE.md` | Decisões de arquitetura e de processo. |
 
-## Features
+## Origem
 
-### Core Technology Stack
-
-- **Astro 5** built with Astro
-- **Tailwind CSS 4** for styling
-- **shadcn/ui** components
-- **TypeScript** support
-- **React 19**
-
-### Key Features
-
-- **Shadcn UI**: uses [shadcn/ui](https://ui.shadcn.com/) core UI components
-- **Theme System**: Dark/light mode with `astro-themes`, compatible with [tweakcn](https://tweakcn.com)
-- **MDX Support**: For content pages
-- **Animations**: Motion library (Framer Motion) integration
-- **Prettier**: Pre-configured code formatting
-- **Custom Fonts**: DM Sans font family included
-- **Icons**: Lucide React + React Icons libraries
-- **Styleglide Integration**: For component previews/development
-- **Responsive Design**: Mobile-friendly layout
-- **SEO Ready**: Proper metadata and OG images included
-
-### Pre-built Pages
-
-- Home/Landing page
-- About page
-- Pricing page
-- FAQ page
-- Contact page with form
-- Login/Signup pages
-
-### Blocks
-
-- Hero section
-- Logo showcase/marquee
-- Features section
-- Resource allocation section
-- Testimonials with carousel
-- Pricing table
-- FAQ with accordion
-- Footer
-- Navigation bar
-
-## Deployment
-
-Production-ready and tested for deployment on [Vercel](https://vercel.com)
-
-## Credits
-
-- Template by [shadcnblocks.com](https://shadcnblocks.com)
-- Design by [Callum Flack](https://x.com/callumflack)
-- Dev by [Yassine Zaanouni](https://x.com/YassineZaanouni)
-- Produced by [Rob Austin](https://x.com/ausrobdev)
+O projeto começou a partir do template Mainline (shadcnblocks.com); o licenciamento original está em
+`LICENSE`. Conteúdo, páginas e componentes de template foram substituídos pelo conteúdo do Risco Cognitivo
+(HANDOFF-RC-GLOBAL-DESIGN-CONTENT-001).
