@@ -76,6 +76,9 @@ export const ROUTES: HubEntry[] = [
   { id: "rss", title: "Feed RSS", group: "Sistema", kind: "route", path: "/rss.xml", description: "Endpoint, não página.", exposure: "public", addedAt: "2026-09-30", source: SRC },
   { id: "sitemap", title: "Sitemap", group: "Sistema", kind: "route", path: "/sitemap-index.xml", description: "Gerado pela integração @astrojs/sitemap.", exposure: "public", addedAt: "2026-09-30", source: SRC },
 
+  // ---------------------------------------------------------------- Estados de teste
+  { id: "lab-funcoes-executivas", title: "Lab — Funções executivas", group: "Estados de teste", kind: "route", path: "/lab/funcoes-executivas/", description: "Hero, 3 capas macro e RC-01 a RC-09 do lote visual de funções executivas.", exposure: "test", addedAt: "2026-10-06", source: "feat/executive-functions-visual-pack-v2" },
+
   // ---------------------------------------------------------------- Interno (admin)
   { id: "admin", title: "Painel", group: "Interno (admin)", kind: "route", path: "/admin/", description: "Painel de acesso às ferramentas.", exposure: "internal", addedAt: "2026-09-30", source: SRC },
   { id: "admin-design-system", title: "Design System", group: "Interno (admin)", kind: "route", path: "/admin/design-system/", description: "Mood board, storyboard, tokens, callouts, dados, plain text e componentes.", exposure: "internal", addedAt: "2026-09-30", source: SRC },
