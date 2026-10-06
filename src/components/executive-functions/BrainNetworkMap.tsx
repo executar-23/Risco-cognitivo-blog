@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import { brainHotspots, type BrainHotspotId } from "../../data/executiveFunctions.data";
 
 interface BrainNetworkMapProps {
@@ -37,6 +37,9 @@ export function BrainNetworkMap({
   interactive = true,
 }: BrainNetworkMapProps) {
   const dots = useMemo(() => buildDots(compact ? 520 : 880), [compact]);
+  const svgId = useId().replace(/:/g, "");
+  const clipId = `rcx-brain-clip-${svgId}`;
+  const gradientId = `rcx-hotspot-gradient-${svgId}`;
 
   return (
     <div className={`rcx-brain-map ${compact ? "rcx-brain-map--compact" : ""}`}>
@@ -47,10 +50,10 @@ export function BrainNetworkMap({
         aria-label="Mapa cerebral didático de redes executivas distribuídas"
       >
         <defs>
-          <clipPath id="rcx-brain-clip">
+          <clipPath id={clipId}>
             <path d="M130,257 C95,198 118,127 178,101 C208,57 275,44 321,68 C367,34 433,48 463,79 C522,65 578,101 590,148 C636,172 654,226 628,265 C653,317 623,370 577,386 C554,432 494,455 451,431 C409,469 351,465 313,438 C268,461 214,443 193,405 C143,395 112,352 125,310 C102,295 102,273 130,257 Z" />
           </clipPath>
-          <radialGradient id="rcx-hotspot-gradient">
+          <radialGradient id={gradientId}>
             <stop offset="0%" stopColor="var(--rcx-orange)" stopOpacity="0.72" />
             <stop offset="58%" stopColor="var(--rcx-orange)" stopOpacity="0.18" />
             <stop offset="100%" stopColor="var(--rcx-orange)" stopOpacity="0" />
@@ -64,7 +67,7 @@ export function BrainNetworkMap({
           <path d="M105 198 C270 359 455 399 626 284" />
         </g>
 
-        <g clipPath="url(#rcx-brain-clip)" className="rcx-brain-dots" aria-hidden="true">
+        <g clipPath={`url(#${clipId})`} className="rcx-brain-dots" aria-hidden="true">
           <rect x="70" y="55" width="570" height="390" fill="var(--rcx-surface)" />
           {dots.map((dot, index) => (
             <circle key={index} cx={dot.x} cy={dot.y} r={dot.r} opacity={dot.opacity} />
@@ -77,7 +80,7 @@ export function BrainNetworkMap({
                 cx={(hotspot.x / 100) * 720}
                 cy={(hotspot.y / 100) * 520}
                 r={isActive ? 72 : 42}
-                fill="url(#rcx-hotspot-gradient)"
+                fill={`url(#${gradientId})`}
                 opacity={isActive ? 1 : 0.32}
               />
             );
