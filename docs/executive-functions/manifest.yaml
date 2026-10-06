@@ -1,0 +1,33 @@
+id: RC-EF-VISUAL-PACK-002
+version: 2.0.0
+area: Design System / Editorial Visual / Neurociencia aplicada
+workflow: Evidence -> Taxonomy -> Design Handoff -> React -> Route -> Validation
+owner: A_DEFINIR
+status: IMPLEMENTED_ON_FEATURE_BRANCH
+automation_level: A4_TARGET
+repository:
+  full_name: executar-23/Risco-cognitivo-blog
+  observed_stack:
+    astro: 5.14.5
+    react: 19.2.0
+    astro_react: 4.4.0
+branch: feat/executive-functions-visual-pack-v2
+route:
+  path: /lab/funcoes-executivas/
+  exposure: test
+outputs:
+  hero: 1
+  macro_covers: 3
+  risk_cards: 9
+ids:
+  macros: [MA-01, MA-02, MA-03]
+  executive_functions: [FE-01, FE-02, FE-03, FE-04, FE-05, FE-06, FE-07]
+  risk_cards: [RC-01, RC-02, RC-03, RC-04, RC-05, RC-06, RC-07, RC-08, RC-09]
+acceptance:
+  - isolated_css_tokens
+  - no_tailwind_dependency_in_module
+  - mobile_first
+  - keyboard_and_aria
+  - reduced_motion
+  - distributed_network_science_language
+  - route_registry_updated
